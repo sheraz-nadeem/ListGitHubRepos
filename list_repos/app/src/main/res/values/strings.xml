@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">GitHub List Repos</string>
+
+    <string name="total_items_count_text">Total Items: %s</string>
 </resources>
