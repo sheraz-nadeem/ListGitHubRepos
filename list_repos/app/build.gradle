@@ -55,6 +55,22 @@ dependencies {
     // RecyclerView
     implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
 
+    // Gson
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
+
+    // okHttp
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$rootProject.retrofitKotlinCoroutineAdapterVersion"
+
+    // Room
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+
+
 
     // Testing Dependencies
     testImplementation "junit:junit:$rootProject.junitVersion"

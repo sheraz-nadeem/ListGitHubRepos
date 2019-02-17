@@ -41,6 +41,11 @@ ext {
     timberVersion = '4.6.1'
     lifecycleVersion = '2.0.0'
     recyclerViewVersion = '1.0.0'
+    gsonVersion = '2.8.5'
+    okHttpVersion = "3.13.1"
+    retrofitVersion = '2.5.0'
+    retrofitKotlinCoroutineAdapterVersion = '0.9.2'
+    roomVersion = '2.1.0-alpha04'
 
     // Test dependencies
     junitVersion = '4.12'
