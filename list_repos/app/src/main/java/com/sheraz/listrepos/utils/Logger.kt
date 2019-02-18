@@ -1,17 +1,22 @@
 package com.sheraz.listrepos.utils
 
+import android.util.Log
 import com.sheraz.listrepos.BuildConfig
+import com.sheraz.listrepos.ui.modules.base.BaseActivity
 import timber.log.Timber
 
 
 
 object Logger {
 
+    private val TAG = Logger::class.java.simpleName
+    private var loggingEnabled = false
 
     init {
         if (BuildConfig.DEBUG) {
-            Timber.plant(Timber.DebugTree())
+            loggingEnabled = true
         }
+        Log.d(TAG, "init(): loggingEnabled: $loggingEnabled")
     }
 
 
@@ -19,12 +24,10 @@ object Logger {
      * Debug Level
      */
 
-    fun d(s: String, vararg objects: Any) {
-        Timber.d(s, objects)
-    }
-
-    fun d(throwable: Throwable, s: String, vararg objects: Any) {
-        Timber.d(throwable, s, objects)
+    fun d(s: String, message: String) {
+        if (loggingEnabled) {
+            Log.d(s, message)
+        }
     }
 
 
@@ -33,12 +36,10 @@ object Logger {
      * Info Level
      */
 
-    fun i(s: String, vararg objects: Any) {
-        Timber.i(s, objects)
-    }
-
-    fun i(throwable: Throwable, s: String, vararg objects: Any) {
-        Timber.i(throwable, s, objects)
+    fun i(s: String, message: String) {
+        if (loggingEnabled) {
+            Log.i(s, message)
+        }
     }
 
 
@@ -47,12 +48,10 @@ object Logger {
      * Verbose Level
      */
 
-    fun v(s: String, vararg objects: Any) {
-        Timber.v(s, objects)
-    }
-
-    fun v(throwable: Throwable, s: String, vararg objects: Any) {
-        Timber.v(throwable, s, objects)
+    fun v(s: String, message: String) {
+        if (loggingEnabled) {
+            Log.v(s, message)
+        }
     }
 
 
@@ -61,12 +60,10 @@ object Logger {
      * Warning Level
      */
 
-    fun w(s: String, vararg objects: Any) {
-        Timber.w(s, objects)
-    }
-
-    fun w(throwable: Throwable, s: String, vararg objects: Any) {
-        Timber.w(throwable, s, objects)
+    fun w(s: String, message: String) {
+        if (loggingEnabled) {
+            Log.w(s, message)
+        }
     }
 
 
@@ -75,12 +72,11 @@ object Logger {
      * Error Level
      */
 
-    fun e(s: String, vararg objects: Any) {
-        Timber.e(s, objects)
+    fun e(s: String, message: String) {
+        if (loggingEnabled) {
+            Log.e(s, message)
+        }
     }
 
-    fun e(throwable: Throwable, s: String, vararg objects: Any) {
-        Timber.e(throwable, s, objects)
-    }
 
 }
