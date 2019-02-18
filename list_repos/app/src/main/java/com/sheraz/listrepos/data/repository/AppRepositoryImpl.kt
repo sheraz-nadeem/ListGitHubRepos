@@ -8,6 +8,7 @@ import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
 import com.sheraz.listrepos.data.network.GitHubNetworkDataSource
 import com.sheraz.listrepos.utils.Logger
 import kotlinx.coroutines.*
+import java.lang.Exception
 
 class AppRepositoryImpl(
 
@@ -43,7 +44,16 @@ class AppRepositoryImpl(
         Logger.d(TAG, "persistDownloadedGitHubRepoEntityList(): gitHubRepoEntityList: $gitHubRepoEntityList")
 
         scope.launch(dispatcherProvider.ioDispatcher) {
-            gitHubRepoEntityDao.insertList(gitHubRepoEntityList)
+            try {
+
+                gitHubRepoEntityDao.insertList(gitHubRepoEntityList)
+
+            } catch (e: Exception) {
+
+                Logger.e(TAG, "persistDownloadedGitHubRepoEntityList(): Exception occurred, Error => ${e.localizedMessage}")
+
+            }
+
         }
 
     }

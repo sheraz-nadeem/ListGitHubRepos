@@ -5,18 +5,28 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.sheraz.listrepos.BR
+import com.sheraz.listrepos.Injector
 import com.sheraz.listrepos.R
-import com.sheraz.listrepos.ui.modules.base.BaseActivity
 import com.sheraz.listrepos.databinding.ActivityHomeBinding
+import com.sheraz.listrepos.ui.modules.base.BaseActivity
 import com.sheraz.listrepos.utils.Logger
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var activityHomeBinding: ActivityHomeBinding
 
+    private val viewModelFactory: ViewModelProvider.Factory
     private var currentPage = 1
+
+
+    init {
+
+        Logger.d(TAG, "init(): ")
+        viewModelFactory = Injector.get().viewModelFactory()
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -46,7 +56,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     override fun getViewModel(): HomeViewModel {
 
         Logger.d(TAG, "getViewModel(): ")
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
         return homeViewModel
 
     }
@@ -60,9 +70,13 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
             if (pagedList != null) {
 
                 Logger.i(TAG, "homeViewModel.Observer(): pagedList.size: ${pagedList.size}")
+
+                if (pagedList.size > 0) currentPage++ // Next time we fetch next page
+
                 val currentItemsCount = homeViewModel.getTotalItemsCount()
                 val totalItemsCount = currentItemsCount + pagedList.size
                 homeViewModel.setTotalItemsCount(totalItemsCount)
+
 
             }
         })

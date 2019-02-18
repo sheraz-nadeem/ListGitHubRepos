@@ -23,30 +23,4 @@ abstract class GitHubRepoDatabase : RoomDatabase() {
 
     abstract fun gitHubRepoEntityDao(): GitHubRepoEntityDao
 
-
-
-
-    /**********
-     * Companion object, common to all instances of this class
-     * Similar to static fields in Java
-     *********/
-
-    companion object {
-        @Volatile
-        private var instance: GitHubRepoDatabase? = null
-        private val LOCK = Any()
-
-        // Below invoke function, implemented as an "operator function" which
-        // allows us to get instance like => "GitHubRepoDatabase()"
-        operator fun invoke(context: Context) = instance ?: synchronized(LOCK) {
-            instance ?: buildDatabase(context).also { instance = it }
-        }
-
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(
-                context.applicationContext,
-                GitHubRepoDatabase::class.java, "github_repo_db"
-            ).build()
-
-    }
 }
