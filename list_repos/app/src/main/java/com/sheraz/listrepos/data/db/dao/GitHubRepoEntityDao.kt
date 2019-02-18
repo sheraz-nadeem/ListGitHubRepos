@@ -11,10 +11,10 @@ import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
 @Dao
 interface GitHubRepoEntityDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(gitHubRepoEntity:  GitHubRepoEntity)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertList(gitHubRepoEntityList: List<GitHubRepoEntity>)
 
     @Query("SELECT * FROM github_repo")
