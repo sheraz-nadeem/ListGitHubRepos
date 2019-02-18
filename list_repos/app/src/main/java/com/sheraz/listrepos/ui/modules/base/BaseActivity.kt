@@ -42,24 +42,7 @@ abstract class BaseActivity<VIEW_DATA_BINDING: ViewDataBinding, VIEW_MODEL: Base
         viewDataBinding.executePendingBindings()
     }
 
-//    fun showLoading() {
-//        hideLoading()
-//        mProgressDialog = new Dialog(context);
-//        if (progressDialog.getWindow() != null) {
-//            progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        }
-//        progressDialog.setContentView(R.layout.progress_dialog);
-//        progressDialog.setIndeterminate(true);
-//        progressDialog.setCancelable(false);
-//        progressDialog.setCanceledOnTouchOutside(false);
-//        progressDialog.show();
-//    }
-//
-//    fun hideLoading() {
-//        if (mProgressDialog != null && mProgressDialog.isShowing) {
-//            mProgressDialog.cancel()
-//        }
-//    }
+
 
     /**********
      * Abstract Methods
