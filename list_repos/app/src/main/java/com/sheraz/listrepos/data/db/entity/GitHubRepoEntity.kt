@@ -11,12 +11,9 @@ import com.google.gson.annotations.SerializedName
 data class GitHubRepoEntity(
 
     @ColumnInfo(name = "id")
-    @PrimaryKey(autoGenerate = true)
-    val rowId: Int,
-
-    @ColumnInfo(name = "repo_id")
+    @PrimaryKey(autoGenerate = false)
     @SerializedName("id")
-    val repoId: Int,
+    val id: Int,
 
     @ColumnInfo(name = "full_name")
     @SerializedName("full_name")
