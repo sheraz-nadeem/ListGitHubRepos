@@ -45,6 +45,13 @@ dependencies {
     // AndroidX
     implementation "androidx.core:core:$rootProject.androidXCoreVersion"
 
+    // Useful Kotlin Extensions
+    implementation "androidx.core:core-ktx:$rootProject.androidXCoreVersion"
+
+    // Kotlin Android Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.kotlinxCoroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.kotlinxCoroutinesVersion"
+
     // logger
     implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
 
@@ -60,6 +67,7 @@ dependencies {
 
     // okHttp
     implementation "com.squareup.okhttp3:okhttp:$rootProject.okHttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okHttpVersion"
 
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
@@ -73,6 +81,10 @@ dependencies {
     // Paging
     implementation "androidx.paging:paging-runtime-ktx:$rootProject.pagingVersion"
 
+    // Dagger
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
 
     // Testing Dependencies
