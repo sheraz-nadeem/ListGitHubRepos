@@ -1,6 +1,7 @@
 package com.sheraz.listrepos.data.db.dao
 
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -19,8 +20,8 @@ interface GitHubRepoEntityDao {
     @Query("SELECT * FROM github_repo")
     fun getAllRepos(): LiveData<List<GitHubRepoEntity>>
 
-    @Query("SELECT * FROM github_repo LIMIT :limit")
-    fun getReposByLimit(limit: Int = 10): LiveData<List<GitHubRepoEntity>>
+    @Query("SELECT * FROM github_repo")
+    fun getAllReposPaged(): DataSource.Factory<Int, GitHubRepoEntity>
 
     @Query("SELECT * FROM github_repo WHERE fork = :forked")
     fun getReposByForkedCondition(forked: Boolean = false): LiveData<List<GitHubRepoEntity>>
