@@ -5,13 +5,16 @@ import androidx.paging.LivePagedListBuilder
 import com.sheraz.listrepos.data.CoroutinesDispatcherProvider
 import com.sheraz.listrepos.data.db.dao.GitHubRepoEntityDao
 import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
+import com.sheraz.listrepos.data.db.mapper.DbRepoMapper
 import com.sheraz.listrepos.data.network.GitHubNetworkDataSource
+import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.utils.Logger
 import kotlinx.coroutines.*
 import java.lang.Exception
 
 class AppRepositoryImpl(
 
+    private val dbRepoMapper: DbRepoMapper,
     private val gitHubRepoEntityDao: GitHubRepoEntityDao,
     private val gitHubNetworkDataSource: GitHubNetworkDataSource,
     private val dispatcherProvider: CoroutinesDispatcherProvider
@@ -19,8 +22,8 @@ class AppRepositoryImpl(
 ) : AppRepository {
 
 
-    override val gitHubRepoEntityPagedFactory: DataSource.Factory<Int, GitHubRepoEntity>
-    override val gitHubRepoEntityPagedListBuilder: LivePagedListBuilder<Int, GitHubRepoEntity>
+    override val gitHubRepoEntityPagedFactory: DataSource.Factory<Int, GitHubRepoItem>
+    override val gitHubRepoEntityPagedListBuilder: LivePagedListBuilder<Int, GitHubRepoItem>
 
     private val parentJob = Job()
     private val scope = CoroutineScope(dispatcherProvider.mainDispatcher + parentJob)
@@ -28,9 +31,9 @@ class AppRepositoryImpl(
     init {
         Logger.d(TAG, "init(): ")
 
-        gitHubRepoEntityPagedFactory = gitHubRepoEntityDao.getAllReposPaged()
+        gitHubRepoEntityPagedFactory = gitHubRepoEntityDao.getAllReposPaged().map { dbRepoMapper.fromDb(it) }
         gitHubRepoEntityPagedListBuilder =
-            LivePagedListBuilder<Int, GitHubRepoEntity>(gitHubRepoEntityPagedFactory, AppRepository.PER_PAGE)
+            LivePagedListBuilder<Int, GitHubRepoItem>(gitHubRepoEntityPagedFactory, AppRepository.PER_PAGE)
 
         // Repository isn't lifecycle-aware, so we observe on NetworkDataSource "forever",
         // As soon as the data is fetched from the network it is persisted in DB immediately

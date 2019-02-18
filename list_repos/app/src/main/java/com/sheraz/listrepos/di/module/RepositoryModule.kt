@@ -2,6 +2,7 @@ package com.sheraz.listrepos.di.module
 
 import com.sheraz.listrepos.data.CoroutinesDispatcherProvider
 import com.sheraz.listrepos.data.db.dao.GitHubRepoEntityDao
+import com.sheraz.listrepos.data.db.mapper.DbRepoMapper
 import com.sheraz.listrepos.data.network.GitHubNetworkDataSource
 import com.sheraz.listrepos.data.repository.AppRepository
 import com.sheraz.listrepos.data.repository.AppRepositoryImpl
@@ -15,9 +16,10 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideAppRepository(
+        dbRepoMapper: DbRepoMapper,
         dao: GitHubRepoEntityDao,
         networkDataSource: GitHubNetworkDataSource,
         dispatcherProvider: CoroutinesDispatcherProvider
-    ): AppRepository = AppRepositoryImpl(dao, networkDataSource, dispatcherProvider)
+    ): AppRepository = AppRepositoryImpl(dbRepoMapper, dao, networkDataSource, dispatcherProvider)
 
 }

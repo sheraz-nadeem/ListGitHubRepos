@@ -3,18 +3,20 @@ package com.sheraz.listrepos.ui.modules.home
 import androidx.databinding.ObservableInt
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
-import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
 import com.sheraz.listrepos.data.repository.AppRepository
+import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.ui.modules.base.BaseViewModel
 import com.sheraz.listrepos.utils.Logger
 
 class HomeViewModel(
+
     private val appRepository: AppRepository
+
 ) : BaseViewModel() {
 
     val totalItemsCount = ObservableInt(0)
 
-    private var githubRepoLiveData: LiveData<PagedList<GitHubRepoEntity>>
+    private var githubRepoLiveData: LiveData<PagedList<GitHubRepoItem>>
 
     init {
         Logger.d(TAG, "init(): ")
@@ -31,7 +33,7 @@ class HomeViewModel(
 
     }
 
-    fun getLiveData(): LiveData<PagedList<GitHubRepoEntity>> = githubRepoLiveData
+    fun getLiveData(): LiveData<PagedList<GitHubRepoItem>> = githubRepoLiveData
 
     override fun onCleared() {
 

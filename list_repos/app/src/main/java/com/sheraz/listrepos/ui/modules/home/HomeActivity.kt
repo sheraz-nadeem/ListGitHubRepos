@@ -70,6 +70,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
             if (pagedList != null) {
 
                 Logger.i(TAG, "homeViewModel.Observer(): pagedList.size: ${pagedList.size}")
+                Logger.i(TAG, "homeViewModel.Observer(): pagedList: $pagedList")
 
                 if (pagedList.size > 0) currentPage++ // Next time we fetch next page
 
