@@ -42,7 +42,7 @@ class GitHubNetworkDataSourceImpl(
             _downloadedGitHubRepoList.postValue(fetchedReposWithPage)
 
         } catch (e: Exception) {
-            Logger.e(TAG, "fetchGitHubRepos(): Exception occurred, Error => ", e)
+            Logger.e(TAG, "fetchGitHubRepos(): Exception occurred, Error => " + e.message)
         }
     }
 
