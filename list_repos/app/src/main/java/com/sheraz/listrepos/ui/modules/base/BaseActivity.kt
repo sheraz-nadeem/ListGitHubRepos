@@ -91,6 +91,12 @@ abstract class BaseActivity<VIEW_DATA_BINDING: ViewDataBinding, VIEW_MODEL: Base
      */
     abstract fun getViewModel(): VIEW_MODEL
 
+    /**
+     * Override for subscribing to live data
+     */
+    abstract fun subscribeUi()
+
+
 
     companion object {
         private val TAG = BaseActivity::class.java.simpleName
