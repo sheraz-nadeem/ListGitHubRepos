@@ -41,6 +41,7 @@ dependencies {
 
     implementation "androidx.appcompat:appcompat:$rootProject.appCompatVersion"
     implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
+    implementation "androidx.cardview:cardview:$rootProject.cardViewVersion"
 
     // AndroidX
     implementation "androidx.core:core:$rootProject.androidXCoreVersion"
