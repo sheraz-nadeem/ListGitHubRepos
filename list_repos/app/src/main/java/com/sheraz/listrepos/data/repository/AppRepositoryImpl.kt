@@ -1,7 +1,9 @@
 package com.sheraz.listrepos.data.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.sheraz.listrepos.data.CoroutinesDispatcherProvider
 import com.sheraz.listrepos.data.db.dao.GitHubRepoEntityDao
 import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
@@ -21,19 +23,24 @@ class AppRepositoryImpl(
 
 ) : AppRepository {
 
-
-    override val gitHubRepoEntityPagedFactory: DataSource.Factory<Int, GitHubRepoItem>
-    override val gitHubRepoEntityPagedListBuilder: LivePagedListBuilder<Int, GitHubRepoItem>
+    override val pagedListConfig: PagedList.Config
 
     private val parentJob = Job()
     private val scope = CoroutineScope(dispatcherProvider.mainDispatcher + parentJob)
 
+    // avoid triggering multiple requests in the same time
+    private var isRequestInProgress = false
+
     init {
         Logger.d(TAG, "init(): ")
 
-        gitHubRepoEntityPagedFactory = gitHubRepoEntityDao.getAllReposPaged().map { dbRepoMapper.fromDb(it) }
-        gitHubRepoEntityPagedListBuilder =
-            LivePagedListBuilder<Int, GitHubRepoItem>(gitHubRepoEntityPagedFactory, AppRepository.PER_PAGE)
+        pagedListConfig =
+            PagedList.Config.Builder()
+                .setPrefetchDistance(AppRepository.PREFETCH_DISTANCE)
+                .setPageSize(AppRepository.DATABASE_PAGE_SIZE)
+                .setInitialLoadSizeHint(AppRepository.DATABASE_PAGE_SIZE)
+                .setEnablePlaceholders(false)
+                .build()
 
         // Repository isn't lifecycle-aware, so we observe on NetworkDataSource "forever",
         // As soon as the data is fetched from the network it is persisted in DB immediately
@@ -42,14 +49,32 @@ class AppRepositoryImpl(
         }
     }
 
+    override fun getLiveDataPagedList() : LiveData<PagedList<GitHubRepoItem>> {
+
+        Logger.d(TAG, "getLiveDataPagedList(): ")
+        return LivePagedListBuilder<Int, GitHubRepoItem>(getAllReposPagedFactory(), pagedListConfig).setBoundaryCallback(RepoBoundaryCallback()).build()
+
+    }
+
+    private fun getAllReposPagedFactory() : DataSource.Factory<Int, GitHubRepoItem> {
+
+        Logger.d(TAG, "getAllReposPagedFactory(): ")
+        return gitHubRepoEntityDao.getAllReposPaged().map { dbRepoMapper.fromDb(it) }
+
+    }
+
     private fun persistDownloadedGitHubRepoEntityList(gitHubRepoEntityList: List<GitHubRepoEntity>) {
 
-        Logger.d(TAG, "persistDownloadedGitHubRepoEntityList(): gitHubRepoEntityList: $gitHubRepoEntityList")
+        Logger.d(TAG, "persistDownloadedGitHubRepoEntityList(): gitHubRepoEntityList.size: ${gitHubRepoEntityList.size}")
 
         scope.launch(dispatcherProvider.ioDispatcher) {
             try {
 
-                gitHubRepoEntityDao.insertList(gitHubRepoEntityList)
+                if (gitHubRepoEntityList.isNotEmpty()) {
+                    gitHubRepoEntityDao.insertList(gitHubRepoEntityList)
+                }
+
+                isRequestInProgress = false
 
             } catch (e: Exception) {
 
@@ -61,21 +86,23 @@ class AppRepositoryImpl(
 
     }
 
-    override fun fetchGitHubReposFromNetwork(page: Int, per_page: Int) {
+    private fun fetchGitHubReposFromNetworkAndPersist(page: Int = 1, per_page: Int = AppRepository.NETWORK_PAGE_SIZE) {
 
-        Logger.d(TAG, "fetchGitHubReposFromNetwork(): page: $page, per_page: $per_page")
+        Logger.d(TAG, "fetchGitHubReposFromNetworkAndPersist(): page: $page, per_page: $per_page")
 
         scope.launch(dispatcherProvider.ioDispatcher) {
 
+            isRequestInProgress = true
             val numOfRows = getNumOfRows()
-            Logger.i(TAG, "fetchGitHubReposFromNetwork(): numOfRows: $numOfRows")
+            val actualPageSize = (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
+            Logger.i(TAG, "fetchGitHubReposFromNetworkAndPersist(): numOfRows: $numOfRows, actualPageSize: $actualPageSize")
 
-            gitHubNetworkDataSource.fetchGitHubRepos(page, per_page)
+            gitHubNetworkDataSource.fetchGitHubRepos(actualPageSize, per_page)
         }
 
     }
 
-    private suspend fun getNumOfRows(): Int {
+    private fun getNumOfRows(): Int {
         return gitHubRepoEntityDao.getNumOfRows()
     }
 
@@ -87,6 +114,32 @@ class AppRepositoryImpl(
     }
 
 
+    inner class RepoBoundaryCallback : PagedList.BoundaryCallback<GitHubRepoItem>() {
+
+        /**
+         * Database returned 0 items. We should query the backend for more items.
+         */
+        override fun onZeroItemsLoaded() {
+            Logger.d(TAG_REPO_BOUNDARY_CALLBACK, "onZeroItemsLoaded(): ")
+            requestAndSaveData()
+        }
+
+        /**
+         * When all items in the database were loaded, we need to query the backend for more items.
+         */
+        override fun onItemAtEndLoaded(itemAtEnd: GitHubRepoItem) {
+            Logger.d(TAG_REPO_BOUNDARY_CALLBACK, "onItemAtEndLoaded(): ")
+            requestAndSaveData()
+        }
+
+        private fun requestAndSaveData() {
+
+            if (isRequestInProgress) return
+            fetchGitHubReposFromNetworkAndPersist()
+
+        }
+    }
+
 
     /**
      * Companion object, common to all instances of this class
@@ -94,5 +147,6 @@ class AppRepositoryImpl(
      */
     companion object {
         private val TAG: String = AppRepositoryImpl::class.java.simpleName
+        private val TAG_REPO_BOUNDARY_CALLBACK: String = RepoBoundaryCallback::class.java.simpleName
     }
 }

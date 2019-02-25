@@ -1,15 +1,14 @@
 package com.sheraz.listrepos.data.repository
 
-import androidx.paging.DataSource
-import androidx.paging.LivePagedListBuilder
+import androidx.lifecycle.LiveData
+import androidx.paging.PagedList
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
 
 interface AppRepository {
 
-    val gitHubRepoEntityPagedFactory: DataSource.Factory<Int, GitHubRepoItem>
-    val gitHubRepoEntityPagedListBuilder: LivePagedListBuilder<Int, GitHubRepoItem>
+    val pagedListConfig: PagedList.Config
 
-    fun fetchGitHubReposFromNetwork(page: Int, per_page: Int = PER_PAGE)
+    fun getLiveDataPagedList() : LiveData<PagedList<GitHubRepoItem>>
     fun cancelAllRequests()
 
 
@@ -18,6 +17,8 @@ interface AppRepository {
      * Similar to static fields in Java
      */
     companion object {
-        const val PER_PAGE = 10
+        const val NETWORK_PAGE_SIZE = 15
+        const val DATABASE_PAGE_SIZE = 10
+        const val PREFETCH_DISTANCE = 5
     }
 }
