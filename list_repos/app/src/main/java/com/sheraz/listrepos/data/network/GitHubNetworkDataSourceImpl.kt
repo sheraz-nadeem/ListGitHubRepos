@@ -28,18 +28,20 @@ class GitHubNetworkDataSourceImpl(
 
         try {
 
-            val fetchedReposWithPage = gitHubApiService
+            val response = gitHubApiService
                 .getReposWithPageAsync(page, per_page)
                 .await()
 
-            Logger.v(TAG, "fetchGitHubRepos(): fetchedReposWithPage: ${fetchedReposWithPage.size}")
-            Logger.v(TAG, "fetchGitHubRepos(): fetchedReposWithPage: $fetchedReposWithPage")
+            Logger.v(TAG, "fetchGitHubRepos(): response: $response")
             // MutableLiveData.postValue must be called from background thread,
             // that is why this function is a "suspend" function which will
             // be called from a coroutine.
             // Finally, postValue will post a task on "main thread" to set the
             // given value
-            _downloadedGitHubRepoList.postValue(fetchedReposWithPage)
+
+            if (response.isSuccessful){
+                _downloadedGitHubRepoList.postValue(response.body()!!)
+            }
 
         } catch (e: Exception) {
             Logger.e(TAG, "fetchGitHubRepos(): Exception occurred, Error => " + e.message)
