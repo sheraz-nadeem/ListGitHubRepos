@@ -12,6 +12,7 @@ interface GitHubRepoItem {
      */
 
     val id: Int
+    val repoId: Int
     val fullName: String
     val name: String
     val isRepoPrivate: Boolean
@@ -19,5 +20,9 @@ interface GitHubRepoItem {
     val url: String
     val description: String?
     val fork: Boolean
+    val ownerAvatarUrl: String?
+    val ownerHtmlUrl: String
+    val ownerType: String?
+    val ownerLogin: String?
 
 }
