@@ -16,24 +16,20 @@ class HomeViewModel(
 
     val totalItemsCount = ObservableInt(0)
 
-    private var githubRepoLiveData: LiveData<PagedList<GitHubRepoItem>>
-
     init {
         Logger.d(TAG, "init(): ")
         setIsLoading(false)
-
-        githubRepoLiveData = appRepository.gitHubRepoEntityPagedListBuilder.build()
     }
 
     fun fetchGitHubReposFromNetworkByPage(page: Int) {
 
         Logger.d(TAG, "fetchGitHubReposFromNetworkByPage(): page: $page")
         setIsLoading(true)
-        appRepository.fetchGitHubReposFromNetwork(page)
+//        appRepository.fetchGitHubReposFromNetwork(page)
 
     }
 
-    fun getLiveData(): LiveData<PagedList<GitHubRepoItem>> = githubRepoLiveData
+    fun getPagedListAsLiveData(): LiveData<PagedList<GitHubRepoItem>> = appRepository.getLiveDataPagedList()
 
     override fun onCleared() {
 

@@ -1,15 +1,20 @@
 package com.sheraz.listrepos.ui.modules.home
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sheraz.listrepos.BR
 import com.sheraz.listrepos.Injector
 import com.sheraz.listrepos.R
 import com.sheraz.listrepos.databinding.ActivityHomeBinding
+import com.sheraz.listrepos.ui.modules.adapters.HomeAdapter
 import com.sheraz.listrepos.ui.modules.base.BaseActivity
 import com.sheraz.listrepos.utils.Logger
+import kotlinx.android.synthetic.main.activity_home.*
+
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
@@ -17,7 +22,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     private lateinit var activityHomeBinding: ActivityHomeBinding
 
     private val viewModelFactory: ViewModelProvider.Factory
-    private var currentPage = 1
+    private lateinit var homeAdapter: HomeAdapter
 
 
     init {
@@ -34,14 +39,25 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         super.onCreate(savedInstanceState)
         activityHomeBinding = getViewDataBinding()
         initUI()
+        initAdapter()
         subscribeUi()
-        homeViewModel.fetchGitHubReposFromNetworkByPage(currentPage)
 
     }
 
     override fun initUI() {
 
         Logger.d(TAG, "initUI(): ")
+        rvGitHubRepoList.layoutManager = LinearLayoutManager(this)
+
+    }
+
+    private fun initAdapter() {
+
+        homeAdapter = HomeAdapter(View.OnClickListener {
+            Logger.d(TAG, "HomeAdapter.OnLongClick(): ")
+
+        })
+        rvGitHubRepoList.adapter = homeAdapter
 
     }
 
@@ -64,23 +80,25 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     override fun subscribeUi() {
 
         Logger.d(TAG, "subscribeUi(): ")
-        homeViewModel.getLiveData().observe(this, Observer { pagedList ->
+        homeViewModel.getPagedListAsLiveData().observe(this, Observer { pagedList ->
 
             homeViewModel.setIsLoading(false)
             if (pagedList != null) {
 
                 Logger.i(TAG, "homeViewModel.Observer(): pagedList.size: ${pagedList.size}")
                 Logger.i(TAG, "homeViewModel.Observer(): pagedList: $pagedList")
-
-                if (pagedList.size > 0) currentPage++ // Next time we fetch next page
-
-                val currentItemsCount = homeViewModel.getTotalItemsCount()
-                val totalItemsCount = currentItemsCount + pagedList.size
-                homeViewModel.setTotalItemsCount(totalItemsCount)
-
-
             }
+
+            homeAdapter.submitList(pagedList)
+            swipeRefreshLayout.isRefreshing = false
         })
+
+    }
+
+    fun setTotalItemsCount(count: Int) {
+
+        Logger.d(TAG, "setTotalItemsCount(): count: $count")
+        homeViewModel.setTotalItemsCount(homeAdapter.currentList?.size!!)
 
     }
 
