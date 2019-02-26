@@ -62,7 +62,7 @@ class NetworkModule {
 
         return Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl("https://api.github.com/users/xing/")
+            .baseUrl(BASE_URL)
             .addCallAdapterFactory(coroutineCallAdapterFactory)
             .addConverterFactory(gsonConverterFactory)
             .build()
@@ -83,5 +83,6 @@ class NetworkModule {
 
     companion object {
         private const val CACHE_SIZE: Long = 10 * 1024 * 1024 // 10MB
+        private const val BASE_URL = "https://api.github.com/users/xing/"
     }
 }
