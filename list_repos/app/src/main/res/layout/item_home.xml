@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dimen_250"
-    android:layout_margin="@dimen/dimen_1"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_3"
     android:orientation="vertical"
     app:cardBackgroundColor="@android:color/white"
-    app:cardCornerRadius="@dimen/dimen_15"
-    app:cardElevation="@dimen/dimen_10">
+    app:cardCornerRadius="@dimen/dimen_2"
+    app:cardElevation="@dimen/dimen_3">
 
     <LinearLayout
+        android:id="@+id/llRootContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -19,12 +21,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/dimen_5">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="@dimen/dimen_85"
                 android:layout_height="@dimen/dimen_85"
-                app:cardCornerRadius="@dimen/dimen_10"
+                android:layout_margin="@dimen/dimen_3"
+                app:cardCornerRadius="@dimen/dimen_5"
                 app:cardElevation="@dimen/dimen_3">
 
                 <ImageView
@@ -72,8 +76,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/dimen_5"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_3"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -85,17 +89,17 @@
                 android:paddingBottom="@dimen/dimen_2">
 
                 <com.sheraz.listrepos.widgets.TextViewNormal
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_90"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Full Repo Name"
                     android:textColor="@color/colorDarkText"
                     android:textSize="@dimen/text_size_smallest" />
 
                 <com.sheraz.listrepos.widgets.TextViewNormal
                     android:id="@+id/tvRepoFullName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    tools:text="Repo Full Name"
                     android:textColor="@color/colorDarkText"
                     android:textSize="@dimen/text_size_smallest"
                     android:textStyle="bold" />
@@ -110,17 +114,18 @@
                 android:paddingBottom="@dimen/dimen_2">
 
                 <com.sheraz.listrepos.widgets.TextViewNormal
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_90"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Description"
                     android:textColor="@color/colorDarkText"
                     android:textSize="@dimen/text_size_smallest" />
 
                 <com.sheraz.listrepos.widgets.TextViewNormal
                     android:id="@+id/tvRepoDescription"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:ellipsize="end"
                     android:textColor="@color/colorDarkText"
                     android:textSize="@dimen/text_size_smallest" />
 
@@ -134,17 +139,17 @@
                 android:paddingBottom="@dimen/dimen_2">
 
                 <com.sheraz.listrepos.widgets.TextViewNormal
-                    android:layout_width="0dp"
+                    android:layout_width="@dimen/dimen_90"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Forked"
                     android:textColor="@color/colorDarkText"
                     android:textSize="@dimen/text_size_smallest" />
 
                 <com.sheraz.listrepos.widgets.TextViewNormal
                     android:id="@+id/tvForked"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    tools:text="TRUE"
                     android:textColor="@color/colorDarkText"
                     android:textAllCaps="true"
                     android:textStyle="bold|italic"
