@@ -87,6 +87,9 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
     kaptAndroidTest "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
 
+    // Picasso
+    implementation "com.squareup.picasso:picasso:$rootProject.picassoVersion"
+
 
     // Testing Dependencies
     testImplementation "junit:junit:$rootProject.junitVersion"

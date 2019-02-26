@@ -50,6 +50,7 @@ ext {
     roomVersion = '2.1.0-alpha04'
     pagingVersion = '2.1.0'
     daggerVersion = '2.16'
+    picassoVersion = '2.71828'
 
     // Test dependencies
     junitVersion = '4.12'
