@@ -1,7 +1,6 @@
 package com.sheraz.listrepos.ui.modules.home
 
 import android.os.Bundle
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -22,16 +21,16 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     private lateinit var activityHomeBinding: ActivityHomeBinding
 
     private val viewModelFactory: ViewModelProvider.Factory
-    private lateinit var homeAdapter: HomeAdapter
+    private val homeAdapter: HomeAdapter
 
 
     init {
 
         Logger.d(TAG, "init(): ")
         viewModelFactory = Injector.get().viewModelFactory()
+        homeAdapter = Injector.get().homeAdapter()
 
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -53,10 +52,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     private fun initAdapter() {
 
-        homeAdapter = HomeAdapter(View.OnClickListener {
-            Logger.d(TAG, "HomeAdapter.OnLongClick(): ")
-
-        })
         rvGitHubRepoList.adapter = homeAdapter
 
     }
@@ -92,13 +87,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
             homeAdapter.submitList(pagedList)
             swipeRefreshLayout.isRefreshing = false
         })
-
-    }
-
-    fun setTotalItemsCount(count: Int) {
-
-        Logger.d(TAG, "setTotalItemsCount(): count: $count")
-        homeViewModel.setTotalItemsCount(homeAdapter.currentList?.size!!)
 
     }
 

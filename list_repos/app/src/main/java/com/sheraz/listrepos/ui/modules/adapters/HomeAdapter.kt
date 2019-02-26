@@ -8,18 +8,20 @@ import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sheraz.listrepos.R
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
-import com.sheraz.listrepos.ui.modules.home.HomeActivity
 import com.sheraz.listrepos.utils.GitHubRepoDiffCallback
 import com.sheraz.listrepos.utils.Logger
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_home.view.*
 
 
-class HomeAdapter(
-
-    private val mListener: View.OnClickListener
-
+class HomeAdapter (
+    private val mPicasso: Picasso
 ) : PagedListAdapter<GitHubRepoItem, HomeAdapter.ViewHolder>(GitHubRepoDiffCallback()) {
 
+
+    private var mListener: View.OnClickListener? = null
+
+    init { Logger.d(TAG, "init(): ") }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, view_type: Int): ViewHolder {
         Logger.d(TAG, "onCreateViewHolder: ")
@@ -32,6 +34,11 @@ class HomeAdapter(
         viewHolder.bind(getItem(position))
     }
 
+    fun setListener(listener: View.OnClickListener) {
+        Logger.d(TAG, "setListener: ")
+        mListener = listener
+    }
+
     inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
         fun bind(gitHubRepoItem: GitHubRepoItem?) {
@@ -41,8 +48,6 @@ class HomeAdapter(
             setUpViews(gitHubRepoItem)
             handleClicks()
 
-            (itemView.context as HomeActivity).setTotalItemsCount(currentList?.size!!)
-
         }
 
         private fun setUpViews(gitHubRepoItem: GitHubRepoItem?) {
@@ -51,10 +56,12 @@ class HomeAdapter(
                 itemView.tag = gitHubRepoItem
             }
 
-//            Picasso.get().load(itemContentModel.driverImage)
-//                .noFade()
-//                .placeholder(R.drawable.ic_driver)
-//                .into(itemView.ivProfileImage)
+            Logger.d(TAG, "setUpViews: position: $adapterPosition, ownerAvatarUrl: ${gitHubRepoItem?.ownerAvatarUrl}")
+
+            mPicasso.load(gitHubRepoItem?.ownerAvatarUrl)
+                .noFade()
+                .placeholder(R.drawable.octocat)
+                .into(itemView.ivOwnerAvatar)
 
             itemView.tvRepoName.text = TextUtils.concat(gitHubRepoItem?.name, " ", gitHubRepoItem?.id.toString())
             itemView.tvOwnerLogin.text = gitHubRepoItem?.ownerLogin
@@ -73,7 +80,7 @@ class HomeAdapter(
             itemView.setOnLongClickListener {
 
                 Logger.d(TAG, "OnLongClickListener: position: $adapterPosition")
-                mListener.onClick(it)
+                mListener?.onClick(it)
                 return@setOnLongClickListener true
 
             }

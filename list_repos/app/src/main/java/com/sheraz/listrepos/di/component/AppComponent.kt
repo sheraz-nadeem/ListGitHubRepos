@@ -37,6 +37,7 @@ interface AppComponent {
     fun gitHubNetworkDataSource(): GitHubNetworkDataSource
     fun picasso(): Picasso
     fun appRepository(): AppRepository
+    fun homeAdapter(): HomeAdapter
     fun homeViewModel(): HomeViewModel
     fun viewModelFactory(): ViewModelProvider.Factory
 
