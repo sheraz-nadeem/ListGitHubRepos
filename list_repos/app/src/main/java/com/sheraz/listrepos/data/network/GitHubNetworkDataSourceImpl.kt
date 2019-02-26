@@ -22,6 +22,14 @@ class GitHubNetworkDataSourceImpl(
         get() = _downloadedGitHubRepoList
 
 
+    /**
+     * Method to get Repos using gitHubApiService and post
+     * the received list of repos on the MutableLiveData
+     * Since, we are doing IO operations with API
+     * service (GitHubApiService) using Retrofit, this method
+     * be a suspend function and called from a coroutine with
+     * IO Dispatcher.
+     */
     override suspend fun fetchGitHubRepos(page: Int, per_page: Int) {
 
         Logger.d(TAG, "fetchGitHubRepos(): page: $page, per_page: $per_page")
@@ -33,13 +41,11 @@ class GitHubNetworkDataSourceImpl(
                 .await()
 
             Logger.v(TAG, "fetchGitHubRepos(): response: $response")
-            // MutableLiveData.postValue must be called from background thread,
-            // that is why this function is a "suspend" function which will
-            // be called from a coroutine.
-            // Finally, postValue will post a task on "main thread" to set the
-            // given value
 
             if (response.isSuccessful){
+                // MutableLiveData.postValue will post a task on
+                // main thread to set the given value
+                // We cannot use MutableLiveData.setValue here
                 _downloadedGitHubRepoList.postValue(response.body()!!)
             }
 
