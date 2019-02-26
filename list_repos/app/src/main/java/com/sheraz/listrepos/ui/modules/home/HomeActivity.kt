@@ -47,6 +47,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
         Logger.d(TAG, "initUI(): ")
         rvGitHubRepoList.layoutManager = LinearLayoutManager(this)
+        swipeRefreshLayout.setOnRefreshListener {
+            homeAdapter.submitList(null)
+            homeViewModel.onRefresh()
+        }
 
     }
 

@@ -90,7 +90,7 @@ class AppRepositoryImpl(
 
     }
 
-    private fun fetchGitHubReposFromNetworkAndPersist(page: Int = 1, per_page: Int = AppRepository.NETWORK_PAGE_SIZE) {
+    override fun fetchGitHubReposFromNetworkAndPersist(page: Int, per_page: Int) {
 
         Logger.d(TAG, "fetchGitHubReposFromNetworkAndPersist(): page: $page, per_page: $per_page")
 
@@ -98,7 +98,8 @@ class AppRepositoryImpl(
 
             _isFetchInProgress.postValue(true)
             val numOfRows = getNumOfRows()
-            val actualPageSize = (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
+//            val actualPageSize = (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
+            val actualPageSize = getActualPageSize(page, numOfRows)
             Logger.i(TAG, "fetchGitHubReposFromNetworkAndPersist(): numOfRows: $numOfRows, actualPageSize: $actualPageSize")
 
             gitHubNetworkDataSource.fetchGitHubRepos(actualPageSize, per_page)
@@ -108,6 +109,13 @@ class AppRepositoryImpl(
 
     private fun getNumOfRows(): Int {
         return gitHubRepoEntityDao.getNumOfRows()
+    }
+
+    private fun getActualPageSize(page: Int, numOfRows: Int): Int {
+        return when (page > 0) {
+            true -> (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
+            false -> 1 // We need to refresh data
+        }
     }
 
     override fun cancelAllRequests() {

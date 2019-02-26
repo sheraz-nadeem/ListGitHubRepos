@@ -22,6 +22,8 @@ class HomeViewModel(
 
     fun getLoadingLiveData(): LiveData<Boolean> = appRepository.isFetchInProgress
 
+    fun onRefresh() = appRepository.fetchGitHubReposFromNetworkAndPersist(-1)
+
     override fun onCleared() {
 
         Logger.d(TAG, "onCleared(): ")
