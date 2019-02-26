@@ -1,5 +1,6 @@
 package com.sheraz.listrepos.data.repository
 
+import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
@@ -7,6 +8,9 @@ import com.sheraz.listrepos.ui.models.GitHubRepoItem
 interface AppRepository {
 
     val pagedListConfig: PagedList.Config
+
+    // avoid triggering multiple requests in the same time
+    val isFetchInProgress: LiveData<Boolean>
 
     fun getLiveDataPagedList() : LiveData<PagedList<GitHubRepoItem>>
     fun cancelAllRequests()

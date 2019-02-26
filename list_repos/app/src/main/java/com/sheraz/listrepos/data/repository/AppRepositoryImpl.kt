@@ -1,6 +1,7 @@
 package com.sheraz.listrepos.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -24,15 +25,18 @@ class AppRepositoryImpl(
 ) : AppRepository {
 
     override val pagedListConfig: PagedList.Config
+    override val isFetchInProgress: LiveData<Boolean>
+        get() = _isFetchInProgress
 
+    private val _isFetchInProgress = MutableLiveData<Boolean>()
     private val parentJob = Job()
     private val scope = CoroutineScope(dispatcherProvider.mainDispatcher + parentJob)
 
-    // avoid triggering multiple requests in the same time
-    private var isRequestInProgress = false
 
     init {
         Logger.d(TAG, "init(): ")
+
+        _isFetchInProgress.value = false
 
         pagedListConfig =
             PagedList.Config.Builder()
@@ -74,7 +78,7 @@ class AppRepositoryImpl(
                     gitHubRepoEntityDao.insertList(gitHubRepoEntityList)
                 }
 
-                isRequestInProgress = false
+                _isFetchInProgress.postValue(false)
 
             } catch (e: Exception) {
 
@@ -92,7 +96,7 @@ class AppRepositoryImpl(
 
         scope.launch(dispatcherProvider.ioDispatcher) {
 
-            isRequestInProgress = true
+            _isFetchInProgress.postValue(true)
             val numOfRows = getNumOfRows()
             val actualPageSize = (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
             Logger.i(TAG, "fetchGitHubReposFromNetworkAndPersist(): numOfRows: $numOfRows, actualPageSize: $actualPageSize")
@@ -134,7 +138,7 @@ class AppRepositoryImpl(
 
         private fun requestAndSaveData() {
 
-            if (isRequestInProgress) return
+            if (_isFetchInProgress.value!!) return
             fetchGitHubReposFromNetworkAndPersist()
 
         }

@@ -1,6 +1,5 @@
 package com.sheraz.listrepos.ui.modules.home
 
-import androidx.databinding.ObservableInt
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.sheraz.listrepos.data.repository.AppRepository
@@ -20,6 +19,8 @@ class HomeViewModel(
     }
 
     fun getPagedListAsLiveData(): LiveData<PagedList<GitHubRepoItem>> = appRepository.getLiveDataPagedList()
+
+    fun getLoadingLiveData(): LiveData<Boolean> = appRepository.isFetchInProgress
 
     override fun onCleared() {
 
