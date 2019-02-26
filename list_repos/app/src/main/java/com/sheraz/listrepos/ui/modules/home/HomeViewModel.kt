@@ -14,19 +14,9 @@ class HomeViewModel(
 
 ) : BaseViewModel() {
 
-    val totalItemsCount = ObservableInt(0)
-
     init {
         Logger.d(TAG, "init(): ")
         setIsLoading(false)
-    }
-
-    fun fetchGitHubReposFromNetworkByPage(page: Int) {
-
-        Logger.d(TAG, "fetchGitHubReposFromNetworkByPage(): page: $page")
-        setIsLoading(true)
-//        appRepository.fetchGitHubReposFromNetwork(page)
-
     }
 
     fun getPagedListAsLiveData(): LiveData<PagedList<GitHubRepoItem>> = appRepository.getLiveDataPagedList()
@@ -38,15 +28,6 @@ class HomeViewModel(
         appRepository.cancelAllRequests()
 
     }
-
-    fun setTotalItemsCount(count: Int) {
-        totalItemsCount.set(count)
-    }
-
-    fun getTotalItemsCount(): Int {
-        return totalItemsCount.get()
-    }
-
 
     companion object {
         private val TAG = HomeViewModel::class.java.simpleName
