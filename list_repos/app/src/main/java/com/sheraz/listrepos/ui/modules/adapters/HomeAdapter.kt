@@ -4,6 +4,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.sheraz.listrepos.R
@@ -69,8 +70,14 @@ class HomeAdapter (
             itemView.tvRepoDescription.text = gitHubRepoItem?.description
 
             when (gitHubRepoItem?.fork) {
-                true -> itemView.tvForked.text = "FORKED"
-                false -> itemView.tvForked.text = "NOT FORKED"
+                true -> {
+                    itemView.tvForked.text = "FORKED"
+                    itemView.llRootContainer.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorPrimaryVeryLight))
+                }
+                false -> {
+                    itemView.tvForked.text = "NOT FORKED"
+                    itemView.llRootContainer.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.white))
+                }
             }
 
         }
