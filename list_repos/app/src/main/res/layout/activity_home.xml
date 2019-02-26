@@ -17,35 +17,22 @@
         android:layout_height="match_parent"
         tools:context=".ui.modules.home.HomeActivity">
 
-        <LinearLayout
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/tvTotalItems"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvGitHubRepoList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@{@string/total_items_count_text(homeViewModel.totalItemsCount)}"
-                android:textSize="@dimen/text_size_large"/>
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/dimen_5"
+                android:paddingLeft="@dimen/dimen_5"
+                android:paddingEnd="@dimen/dimen_5"
+                android:paddingRight="@dimen/dimen_5" />
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/swipeRefreshLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvGitHubRepoList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingStart="@dimen/dimen_5"
-                    android:paddingLeft="@dimen/dimen_5"
-                    android:paddingEnd="@dimen/dimen_5"
-                    android:paddingRight="@dimen/dimen_5"/>
-
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-        </LinearLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
         <androidx.core.widget.ContentLoadingProgressBar
