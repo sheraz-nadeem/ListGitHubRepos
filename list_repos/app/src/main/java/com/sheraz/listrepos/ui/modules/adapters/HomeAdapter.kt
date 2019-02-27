@@ -72,11 +72,11 @@ class HomeAdapter (
             when (gitHubRepoItem?.fork) {
                 true -> {
                     itemView.tvForked.text = "FORKED"
-                    itemView.llRootContainer.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorPrimaryVeryLight))
+                    itemView.llRootContainer.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.white))
                 }
                 false -> {
                     itemView.tvForked.text = "NOT FORKED"
-                    itemView.llRootContainer.setBackgroundColor(ContextCompat.getColor(itemView.context, android.R.color.white))
+                    itemView.llRootContainer.setBackgroundColor(ContextCompat.getColor(itemView.context, R.color.colorPrimaryVeryLight))
                 }
             }
 
