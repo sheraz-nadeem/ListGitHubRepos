@@ -1,6 +1,5 @@
 package com.sheraz.listrepos.ui.modules.home
 
-import androidx.databinding.ObservableInt
 import androidx.lifecycle.LiveData
 import androidx.paging.PagedList
 import com.sheraz.listrepos.data.repository.AppRepository
@@ -14,22 +13,16 @@ class HomeViewModel(
 
 ) : BaseViewModel() {
 
-    val totalItemsCount = ObservableInt(0)
-
     init {
         Logger.d(TAG, "init(): ")
         setIsLoading(false)
     }
 
-    fun fetchGitHubReposFromNetworkByPage(page: Int) {
-
-        Logger.d(TAG, "fetchGitHubReposFromNetworkByPage(): page: $page")
-        setIsLoading(true)
-//        appRepository.fetchGitHubReposFromNetwork(page)
-
-    }
-
     fun getPagedListAsLiveData(): LiveData<PagedList<GitHubRepoItem>> = appRepository.getLiveDataPagedList()
+
+    fun getLoadingLiveData(): LiveData<Boolean> = appRepository.isFetchInProgress
+
+    fun onRefresh() = appRepository.fetchGitHubReposFromNetworkAndPersist(-1)
 
     override fun onCleared() {
 
@@ -38,15 +31,6 @@ class HomeViewModel(
         appRepository.cancelAllRequests()
 
     }
-
-    fun setTotalItemsCount(count: Int) {
-        totalItemsCount.set(count)
-    }
-
-    fun getTotalItemsCount(): Int {
-        return totalItemsCount.get()
-    }
-
 
     companion object {
         private val TAG = HomeViewModel::class.java.simpleName

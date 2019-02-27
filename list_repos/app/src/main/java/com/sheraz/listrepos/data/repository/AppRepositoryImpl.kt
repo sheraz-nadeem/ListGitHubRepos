@@ -1,6 +1,7 @@
 package com.sheraz.listrepos.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -24,15 +25,18 @@ class AppRepositoryImpl(
 ) : AppRepository {
 
     override val pagedListConfig: PagedList.Config
+    override val isFetchInProgress: LiveData<Boolean>
+        get() = _isFetchInProgress
 
+    private val _isFetchInProgress = MutableLiveData<Boolean>()
     private val parentJob = Job()
     private val scope = CoroutineScope(dispatcherProvider.mainDispatcher + parentJob)
 
-    // avoid triggering multiple requests in the same time
-    private var isRequestInProgress = false
 
     init {
         Logger.d(TAG, "init(): ")
+
+        _isFetchInProgress.value = false
 
         pagedListConfig =
             PagedList.Config.Builder()
@@ -74,7 +78,7 @@ class AppRepositoryImpl(
                     gitHubRepoEntityDao.insertList(gitHubRepoEntityList)
                 }
 
-                isRequestInProgress = false
+                _isFetchInProgress.postValue(false)
 
             } catch (e: Exception) {
 
@@ -86,15 +90,16 @@ class AppRepositoryImpl(
 
     }
 
-    private fun fetchGitHubReposFromNetworkAndPersist(page: Int = 1, per_page: Int = AppRepository.NETWORK_PAGE_SIZE) {
+    override fun fetchGitHubReposFromNetworkAndPersist(page: Int, per_page: Int) {
 
         Logger.d(TAG, "fetchGitHubReposFromNetworkAndPersist(): page: $page, per_page: $per_page")
 
         scope.launch(dispatcherProvider.ioDispatcher) {
 
-            isRequestInProgress = true
+            _isFetchInProgress.postValue(true)
             val numOfRows = getNumOfRows()
-            val actualPageSize = (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
+//            val actualPageSize = (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
+            val actualPageSize = getActualPageSize(page, numOfRows)
             Logger.i(TAG, "fetchGitHubReposFromNetworkAndPersist(): numOfRows: $numOfRows, actualPageSize: $actualPageSize")
 
             gitHubNetworkDataSource.fetchGitHubRepos(actualPageSize, per_page)
@@ -104,6 +109,13 @@ class AppRepositoryImpl(
 
     private fun getNumOfRows(): Int {
         return gitHubRepoEntityDao.getNumOfRows()
+    }
+
+    private fun getActualPageSize(page: Int, numOfRows: Int): Int {
+        return when (page > 0) {
+            true -> (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
+            false -> 1 // We need to refresh data
+        }
     }
 
     override fun cancelAllRequests() {
@@ -134,7 +146,7 @@ class AppRepositoryImpl(
 
         private fun requestAndSaveData() {
 
-            if (isRequestInProgress) return
+            if (_isFetchInProgress.value!!) return
             fetchGitHubReposFromNetworkAndPersist()
 
         }

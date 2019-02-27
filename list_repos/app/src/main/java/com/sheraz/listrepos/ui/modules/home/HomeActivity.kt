@@ -47,6 +47,10 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
         Logger.d(TAG, "initUI(): ")
         rvGitHubRepoList.layoutManager = LinearLayoutManager(this)
+        swipeRefreshLayout.setOnRefreshListener {
+            homeAdapter.submitList(null)
+            homeViewModel.onRefresh()
+        }
 
     }
 
@@ -77,15 +81,19 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         Logger.d(TAG, "subscribeUi(): ")
         homeViewModel.getPagedListAsLiveData().observe(this, Observer { pagedList ->
 
-            homeViewModel.setIsLoading(false)
             if (pagedList != null) {
 
-                Logger.i(TAG, "homeViewModel.Observer(): pagedList.size: ${pagedList.size}")
-                Logger.i(TAG, "homeViewModel.Observer(): pagedList: $pagedList")
+                Logger.i(TAG, "pagedList.Observer(): pagedList.size: ${pagedList.size}")
+                Logger.i(TAG, "pagedList.Observer(): pagedList: $pagedList")
             }
 
             homeAdapter.submitList(pagedList)
             swipeRefreshLayout.isRefreshing = false
+        })
+
+        homeViewModel.getLoadingLiveData().observe(this, Observer { isFetchInProgress ->
+            Logger.d(TAG, "loading.Observer(): isFetchInProgress: $isFetchInProgress")
+            homeViewModel.setIsLoading(isFetchInProgress)
         })
 
     }
