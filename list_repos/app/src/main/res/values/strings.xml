@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">GitHub List Repos</string>
 
-    <string name="total_items_count_text">Total Items: %s</string>
+    <string name="go_to_url_bottom_sheet_header_text">Choose your option</string>
+    <string name="repo_html_url_option_text">Repository URL</string>
+    <string name="owner_html_url_option_text">Owner URL</string>
 </resources>
