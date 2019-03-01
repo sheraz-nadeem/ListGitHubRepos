@@ -6,15 +6,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sheraz.listrepos.BR
 import com.sheraz.listrepos.Injector
-import com.sheraz.listrepos.R
 import com.sheraz.listrepos.databinding.ActivityHomeBinding
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.ui.modules.adapters.HomeAdapter
 import com.sheraz.listrepos.ui.modules.base.BaseActivity
 import com.sheraz.listrepos.utils.Logger
 import kotlinx.android.synthetic.main.activity_home.*
+import android.content.Intent
+import android.net.Uri
+import com.sheraz.listrepos.BR
+import com.sheraz.listrepos.R
 
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
@@ -112,7 +114,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     override fun onChooseUrl(chosenUrl: String) {
 
         Logger.d(TAG, "onChooseUrl(): chosenUrl: $chosenUrl")
-
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(chosenUrl)))
+        } catch (e: Exception) {
+            Logger.e(TAG, "onChooseUrl(): chosenUrl: $chosenUrl, Exception occurred while parsing, Error => ${e.message}")
+        }
     }
 
     companion object {
