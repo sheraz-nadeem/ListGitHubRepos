@@ -23,6 +23,11 @@ android {
         enabled = true
     }
 
+    androidExtensions {
+        // Enable experimental features like "@Parcelize"
+        experimental = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
