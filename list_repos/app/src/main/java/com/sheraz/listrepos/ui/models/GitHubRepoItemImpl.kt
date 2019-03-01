@@ -1,5 +1,9 @@
 package com.sheraz.listrepos.ui.models
 
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
 data class GitHubRepoItemImpl(
     override val id: Int,
     override val repoId: Int,
@@ -14,7 +18,7 @@ data class GitHubRepoItemImpl(
     override val ownerHtmlUrl: String,
     override val ownerType: String?,
     override val ownerLogin: String?
-) : GitHubRepoItem {
+) : GitHubRepoItem, Parcelable {
 
     override fun equals(other: Any?): Boolean {
 
