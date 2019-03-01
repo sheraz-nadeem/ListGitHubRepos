@@ -6,6 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import com.sheraz.listrepos.internal.findFragmentByTag
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.ui.modules.home.GoToUrlBottomSheetDialogFragment
 import com.sheraz.listrepos.utils.Logger
@@ -46,11 +47,9 @@ abstract class BaseActivity<VIEW_DATA_BINDING : ViewDataBinding, VIEW_MODEL : Ba
 
         Logger.d(TAG, "openGoToUrlBottomSheet(): gitHubRepoItem: $gitHubRepoItem")
 
-        var fragment: GoToUrlBottomSheetDialogFragment? = supportFragmentManager.findFragmentByTag(GoToUrlBottomSheetDialogFragment.TAG) as? GoToUrlBottomSheetDialogFragment
+        var fragment: GoToUrlBottomSheetDialogFragment? = findFragmentByTag(GoToUrlBottomSheetDialogFragment.TAG)
 
-        if (fragment != null) {
-            fragment.dismiss()
-        }
+        fragment?.dismiss()
 
         fragment = GoToUrlBottomSheetDialogFragment.newInstance(gitHubRepoItem)
         fragment.setGoToUrlListener(this)
