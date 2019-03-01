@@ -1,6 +1,7 @@
 package com.sheraz.listrepos.ui.modules.home
 
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -9,6 +10,7 @@ import com.sheraz.listrepos.BR
 import com.sheraz.listrepos.Injector
 import com.sheraz.listrepos.R
 import com.sheraz.listrepos.databinding.ActivityHomeBinding
+import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.ui.modules.adapters.HomeAdapter
 import com.sheraz.listrepos.ui.modules.base.BaseActivity
 import com.sheraz.listrepos.utils.Logger
@@ -38,7 +40,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         super.onCreate(savedInstanceState)
         activityHomeBinding = getViewDataBinding()
         initUI()
-        initAdapter()
+        setUpListeners()
         subscribeUi()
 
     }
@@ -46,17 +48,26 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     override fun initUI() {
 
         Logger.d(TAG, "initUI(): ")
+
         rvGitHubRepoList.layoutManager = LinearLayoutManager(this)
+        rvGitHubRepoList.adapter = homeAdapter
+
+    }
+
+    private fun setUpListeners() {
+
+        Logger.d(TAG, "setUpListeners(): ")
+
+        homeAdapter.setListener(View.OnClickListener {
+            if (it.tag != null) {
+                openGoToUrlBottomSheet(it.tag as GitHubRepoItem)
+            }
+        })
+
         swipeRefreshLayout.setOnRefreshListener {
             homeAdapter.submitList(null)
             homeViewModel.onRefresh()
         }
-
-    }
-
-    private fun initAdapter() {
-
-        rvGitHubRepoList.adapter = homeAdapter
 
     }
 
@@ -98,6 +109,11 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     }
 
+    override fun onChooseUrl(chosenUrl: String) {
+
+        Logger.d(TAG, "onChooseUrl(): chosenUrl: $chosenUrl")
+
+    }
 
     companion object {
         private val TAG = HomeActivity::class.java.simpleName
