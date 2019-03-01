@@ -6,12 +6,12 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.sheraz.listrepos.ViewModelProviderFactory
+import com.sheraz.listrepos.ui.models.GitHubRepoItem
+import com.sheraz.listrepos.ui.modules.home.GoToUrlBottomSheetDialogFragment
 import com.sheraz.listrepos.utils.Logger
 
-abstract class BaseActivity<VIEW_DATA_BINDING: ViewDataBinding, VIEW_MODEL: BaseViewModel> : AppCompatActivity() {
+abstract class BaseActivity<VIEW_DATA_BINDING : ViewDataBinding, VIEW_MODEL : BaseViewModel> : AppCompatActivity(),
+    GoToUrlBottomSheetDialogFragment.OnChooseGoToUrlListener {
 
     private lateinit var progressDialog: Dialog
     private lateinit var viewDataBinding: VIEW_DATA_BINDING
@@ -42,7 +42,21 @@ abstract class BaseActivity<VIEW_DATA_BINDING: ViewDataBinding, VIEW_MODEL: Base
         viewDataBinding.executePendingBindings()
     }
 
+    fun openGoToUrlBottomSheet(gitHubRepoItem: GitHubRepoItem) {
 
+        Logger.d(TAG, "openGoToUrlBottomSheet(): gitHubRepoItem: $gitHubRepoItem")
+
+        var fragment: GoToUrlBottomSheetDialogFragment? = supportFragmentManager.findFragmentByTag(GoToUrlBottomSheetDialogFragment.TAG) as? GoToUrlBottomSheetDialogFragment
+
+        if (fragment != null) {
+            fragment.dismiss()
+        }
+
+        fragment = GoToUrlBottomSheetDialogFragment.newInstance(gitHubRepoItem)
+        fragment.setGoToUrlListener(this)
+        fragment.show(supportFragmentManager, GoToUrlBottomSheetDialogFragment.TAG)
+
+    }
 
     /**********
      * Abstract Methods
@@ -78,7 +92,6 @@ abstract class BaseActivity<VIEW_DATA_BINDING: ViewDataBinding, VIEW_MODEL: Base
      * Override for subscribing to live data
      */
     abstract fun subscribeUi()
-
 
 
     companion object {
