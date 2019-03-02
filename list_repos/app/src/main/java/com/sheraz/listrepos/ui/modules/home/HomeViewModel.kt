@@ -22,6 +22,8 @@ class HomeViewModel(
 
     fun getLoadingLiveData(): LiveData<Boolean> = appRepository.isFetchInProgress
 
+    fun getNetworkErrorLiveData(): LiveData<Exception> = appRepository.networkError
+
     fun onRefresh() = appRepository.fetchGitHubReposFromNetworkAndPersist(-1)
 
     override fun onCleared() {

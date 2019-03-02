@@ -15,6 +15,9 @@ import com.sheraz.listrepos.utils.Logger
 import kotlinx.android.synthetic.main.activity_home.*
 import android.content.Intent
 import android.net.Uri
+import androidx.paging.PagedList
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.sheraz.listrepos.BR
 import com.sheraz.listrepos.R
 
@@ -67,7 +70,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         })
 
         swipeRefreshLayout.setOnRefreshListener {
-            homeAdapter.submitList(null)
             homeViewModel.onRefresh()
         }
 
@@ -92,21 +94,21 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     override fun subscribeUi() {
 
         Logger.d(TAG, "subscribeUi(): ")
+
         homeViewModel.getPagedListAsLiveData().observe(this, Observer { pagedList ->
-
-            if (pagedList != null) {
-
-                Logger.i(TAG, "pagedList.Observer(): pagedList.size: ${pagedList.size}")
-                Logger.i(TAG, "pagedList.Observer(): pagedList: $pagedList")
-            }
-
-            homeAdapter.submitList(pagedList)
-            swipeRefreshLayout.isRefreshing = false
+            Logger.i(TAG, "pagedList.Observer(): pagedList.size: ${pagedList?.size}")
+            Logger.i(TAG, "pagedList.Observer(): pagedList: ${pagedList?.toString()}")
+            submitList(pagedList, false)
         })
 
         homeViewModel.getLoadingLiveData().observe(this, Observer { isFetchInProgress ->
             Logger.d(TAG, "loading.Observer(): isFetchInProgress: $isFetchInProgress")
-            homeViewModel.setIsLoading(isFetchInProgress)
+            handleFetchInProgress(isFetchInProgress)
+        })
+
+        homeViewModel.getNetworkErrorLiveData().observe(this, Observer { exception ->
+            Logger.d(TAG, "networkError.Observer(): exception: $exception")
+            handleNetworkError(exception)
         })
 
     }
@@ -119,6 +121,31 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         } catch (e: Exception) {
             Logger.e(TAG, "onChooseUrl(): chosenUrl: $chosenUrl, Exception occurred while parsing, Error => ${e.message}")
         }
+
+    }
+
+    private fun submitList(pagedList: PagedList<GitHubRepoItem>?, isRefreshing: Boolean) {
+
+        Logger.d(TAG, "submitList(): pagedList: ${pagedList?.size}, isRefreshing: $isRefreshing")
+        homeAdapter.submitList(pagedList)
+        swipeRefreshLayout.isRefreshing = isRefreshing
+
+    }
+
+    private fun handleFetchInProgress(isFetchInProgress: Boolean) {
+
+        Logger.d(TAG, "handleFetchInProgress(): isFetchInProgress: $isFetchInProgress")
+        homeViewModel.setIsLoading(isFetchInProgress)
+        swipeRefreshLayout.isRefreshing = false
+
+    }
+
+    private fun handleNetworkError(exception: Exception) {
+
+        Logger.d(TAG, "handleNetworkError(): exception: $exception")
+        swipeRefreshLayout.isRefreshing = false
+        Snackbar.make(activityHomeBinding.root, exception.message.toString(), LENGTH_LONG).show()
+
     }
 
     companion object {

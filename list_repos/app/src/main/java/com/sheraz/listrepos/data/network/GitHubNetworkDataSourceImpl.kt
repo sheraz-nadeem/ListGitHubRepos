@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
 import com.sheraz.listrepos.utils.Logger
+import java.io.IOException
 
 class GitHubNetworkDataSourceImpl(
     private val gitHubApiService: GitHubApiService
@@ -17,8 +18,8 @@ class GitHubNetworkDataSourceImpl(
     /**
      * Encapsulating Mutable value so that it can only be changed within the "fetchGitHubRepos()" method
      */
-    private val _downloadedGitHubRepoList = MutableLiveData<List<GitHubRepoEntity>>()
-    override val downloadedGitHubRepoList: LiveData<List<GitHubRepoEntity>>
+    private val _downloadedGitHubRepoList = MutableLiveData<Result<List<GitHubRepoEntity>>>()
+    override val downloadedGitHubRepoList: LiveData<Result<List<GitHubRepoEntity>>>
         get() = _downloadedGitHubRepoList
 
 
@@ -46,11 +47,14 @@ class GitHubNetworkDataSourceImpl(
                 // MutableLiveData.postValue will post a task on
                 // main thread to set the given value
                 // We cannot use MutableLiveData.setValue here
-                _downloadedGitHubRepoList.postValue(response.body()!!)
+                _downloadedGitHubRepoList.postValue(Result.success(response.body()!!))
+            } else {
+                _downloadedGitHubRepoList.postValue(Result.failure(IOException(response.message())))
             }
 
         } catch (e: Exception) {
             Logger.e(TAG, "fetchGitHubRepos(): Exception occurred, Error => " + e.message)
+            _downloadedGitHubRepoList.postValue(Result.failure(e))
         }
     }
 

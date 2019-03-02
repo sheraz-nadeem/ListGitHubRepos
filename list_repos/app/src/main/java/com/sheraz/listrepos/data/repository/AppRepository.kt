@@ -10,6 +10,7 @@ interface AppRepository {
 
     // avoid triggering multiple requests in the same time
     val isFetchInProgress: LiveData<Boolean>
+    val networkError: LiveData<Exception>
 
     fun fetchGitHubReposFromNetworkAndPersist(page: Int = 1, per_page: Int = AppRepository.NETWORK_PAGE_SIZE)
     fun getLiveDataPagedList() : LiveData<PagedList<GitHubRepoItem>>

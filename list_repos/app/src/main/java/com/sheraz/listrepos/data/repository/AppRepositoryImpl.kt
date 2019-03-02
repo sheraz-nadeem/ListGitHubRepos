@@ -13,7 +13,7 @@ import com.sheraz.listrepos.data.network.GitHubNetworkDataSource
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.utils.Logger
 import kotlinx.coroutines.*
-import java.lang.Exception
+import kotlin.Exception
 
 class AppRepositoryImpl(
 
@@ -25,10 +25,15 @@ class AppRepositoryImpl(
 ) : AppRepository {
 
     override val pagedListConfig: PagedList.Config
+
+    private val _isFetchInProgress = MutableLiveData<Boolean>()
     override val isFetchInProgress: LiveData<Boolean>
         get() = _isFetchInProgress
 
-    private val _isFetchInProgress = MutableLiveData<Boolean>()
+    private val _networkError = MutableLiveData<Exception>()
+    override val networkError: LiveData<Exception>
+        get() = _networkError
+
     private val parentJob = Job()
     private val scope = CoroutineScope(dispatcherProvider.mainDispatcher + parentJob)
 
@@ -48,8 +53,13 @@ class AppRepositoryImpl(
 
         // Repository isn't lifecycle-aware, so we observe on NetworkDataSource "forever",
         // As soon as the data is fetched from the network it is persisted in DB immediately
-        gitHubNetworkDataSource.downloadedGitHubRepoList.observeForever { gitHubRepoEntityList ->
-            persistDownloadedGitHubRepoEntityList(gitHubRepoEntityList)
+        gitHubNetworkDataSource.downloadedGitHubRepoList.observeForever { result ->
+
+            _isFetchInProgress.postValue(false)
+            result
+                .onSuccess { persistDownloadedGitHubRepoEntityList(it) }
+                .onFailure { _networkError.postValue(it as Exception)  }
+
         }
     }
 
@@ -77,8 +87,6 @@ class AppRepositoryImpl(
                 if (gitHubRepoEntityList.isNotEmpty()) {
                     gitHubRepoEntityDao.insertList(gitHubRepoEntityList)
                 }
-
-                _isFetchInProgress.postValue(false)
 
             } catch (e: Exception) {
 
