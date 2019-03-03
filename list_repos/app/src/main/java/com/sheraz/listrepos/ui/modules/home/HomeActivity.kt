@@ -54,6 +54,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         Logger.d(TAG, "initUI(): ")
 
         setUpActionBar()
+        fab.hide()
         rvGitHubRepoList.layoutManager = LinearLayoutManager(this)
         rvGitHubRepoList.adapter = homeAdapter
 
@@ -79,6 +80,12 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
                 lpToolbar.leftMargin += insets.systemWindowInsetLeft
                 lpToolbar.rightMargin += insets.systemWindowInsetRight
                 v.layoutParams = lpToolbar
+
+                // inset the fab for the navbar at the bottom
+                val lpFab = fab.layoutParams as ViewGroup.MarginLayoutParams
+                lpFab.bottomMargin += insets.systemWindowInsetBottom // portrait
+                lpFab.rightMargin += insets.systemWindowInsetRight // landscape
+                fab.layoutParams = lpFab
 
                 // clear this listener so insets aren't re-applied
                 v.setOnApplyWindowInsetsListener(null)
