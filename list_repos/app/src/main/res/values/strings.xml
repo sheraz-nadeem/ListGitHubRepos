@@ -4,4 +4,5 @@
     <string name="go_to_url_bottom_sheet_header_text">Choose your option</string>
     <string name="repo_html_url_option_text">Repository URL</string>
     <string name="owner_html_url_option_text">Owner URL</string>
+    <string name="clear_local_db_cache_menu_text">Clear local cache</string>
 </resources>

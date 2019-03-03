@@ -20,6 +20,8 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.sheraz.listrepos.BR
 import com.sheraz.listrepos.R
+import android.view.Menu
+import android.view.MenuItem
 
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
@@ -146,6 +148,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         swipeRefreshLayout.isRefreshing = false
         Snackbar.make(activityHomeBinding.root, exception.message.toString(), LENGTH_LONG).show()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.options_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.clearLocalDbCache -> homeViewModel.onClearCache()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     companion object {
