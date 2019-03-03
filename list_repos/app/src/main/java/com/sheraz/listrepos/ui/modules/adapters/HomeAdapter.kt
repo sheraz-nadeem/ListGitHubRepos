@@ -1,6 +1,5 @@
 package com.sheraz.listrepos.ui.modules.adapters
 
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -64,7 +63,7 @@ class HomeAdapter (
                 .placeholder(R.drawable.octocat)
                 .into(itemView.ivOwnerAvatar)
 
-            itemView.tvRepoName.text = TextUtils.concat(gitHubRepoItem?.name, " ", gitHubRepoItem?.id.toString())
+            itemView.tvRepoName.text = gitHubRepoItem?.name
             itemView.tvOwnerLogin.text = gitHubRepoItem?.ownerLogin
             itemView.tvRepoFullName.text = gitHubRepoItem?.fullName
             itemView.tvRepoDescription.text = gitHubRepoItem?.description
