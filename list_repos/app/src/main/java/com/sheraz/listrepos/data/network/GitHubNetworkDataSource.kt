@@ -6,6 +6,6 @@ import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
 interface GitHubNetworkDataSource {
 
     val downloadedGitHubRepoList: LiveData<Result<List<GitHubRepoEntity>>>
-    suspend fun fetchGitHubRepos(page: Int, per_page: Int)
+    suspend fun loadGitHubRepos(page: Int, per_page: Int)
 
 }
