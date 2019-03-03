@@ -27,7 +27,7 @@ interface GitHubRepoEntityDao {
     fun getReposByForkedCondition(forked: Boolean = false): LiveData<List<GitHubRepoEntity>>
 
     @Query("DELETE FROM github_repo")
-    fun deleteAll()
+    fun deleteAll(): Int
 
     @Query("SELECT COUNT(*) FROM github_repo")
     fun getNumOfRows(): Int
