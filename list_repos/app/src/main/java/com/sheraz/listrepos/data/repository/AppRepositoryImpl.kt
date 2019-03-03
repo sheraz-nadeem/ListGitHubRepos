@@ -63,6 +63,26 @@ class AppRepositoryImpl(
         }
     }
 
+    override fun clearCache() {
+
+        Logger.d(TAG, "clearCache(): ")
+
+        scope.launch(dispatcherProvider.ioDispatcher) {
+            try {
+
+                val numOfRowsDeleted = gitHubRepoEntityDao.deleteAll()
+                Logger.i(TAG, "clearCache(): numOfRowsDeleted: $numOfRowsDeleted")
+
+            } catch (e: Exception) {
+
+                Logger.e(TAG, "clearCache(): Exception occurred, Error => ${e.message}")
+
+            }
+
+        }
+
+    }
+
     override fun refreshReposList() {
 
         Logger.d(TAG, "refreshReposList(): ")
@@ -117,7 +137,7 @@ class AppRepositoryImpl(
             val actualPageSize = getActualPageSize(page, numOfRows)
             Logger.i(TAG, "fetchGitHubReposFromNetworkAndPersist(): numOfRows: $numOfRows, actualPageSize: $actualPageSize")
 
-            gitHubNetworkDataSource.fetchGitHubRepos(actualPageSize, per_page)
+            gitHubNetworkDataSource.loadGitHubRepos(actualPageSize, per_page)
         }
 
     }

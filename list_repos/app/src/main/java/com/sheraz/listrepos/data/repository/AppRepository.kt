@@ -12,6 +12,7 @@ interface AppRepository {
     val isFetchInProgress: LiveData<Boolean>
     val networkError: LiveData<Exception>
 
+    fun clearCache()
     fun refreshReposList()
     fun getLiveDataPagedList() : LiveData<PagedList<GitHubRepoItem>>
     fun cancelAllRequests()
@@ -22,8 +23,8 @@ interface AppRepository {
      * Similar to static fields in Java
      */
     companion object {
-        const val NETWORK_PAGE_SIZE = 15
-        const val DATABASE_PAGE_SIZE = 10
+        const val NETWORK_PAGE_SIZE = 50
+        const val DATABASE_PAGE_SIZE = 20
         const val PREFETCH_DISTANCE = 5
     }
 }
