@@ -26,6 +26,8 @@ class HomeViewModel(
 
     fun onRefresh() = appRepository.refreshReposList()
 
+    fun onClearCache() = appRepository.clearCache()
+
     override fun onCleared() {
 
         Logger.d(TAG, "onCleared(): ")
