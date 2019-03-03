@@ -1,26 +1,28 @@
 package com.sheraz.listrepos.ui.modules.home
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
+import com.sheraz.listrepos.BR
 import com.sheraz.listrepos.Injector
+import com.sheraz.listrepos.R
 import com.sheraz.listrepos.databinding.ActivityHomeBinding
+import com.sheraz.listrepos.internal.bindViewModel
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.ui.modules.adapters.HomeAdapter
 import com.sheraz.listrepos.ui.modules.base.BaseActivity
 import com.sheraz.listrepos.utils.Logger
 import kotlinx.android.synthetic.main.activity_home.*
-import android.content.Intent
-import android.net.Uri
-import androidx.paging.PagedList
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
-import com.sheraz.listrepos.BR
-import com.sheraz.listrepos.R
-import android.view.Menu
-import android.view.MenuItem
-import com.sheraz.listrepos.internal.bindViewModel
 
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
@@ -51,8 +53,39 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
         Logger.d(TAG, "initUI(): ")
 
+        setUpActionBar()
         rvGitHubRepoList.layoutManager = LinearLayoutManager(this)
         rvGitHubRepoList.adapter = homeAdapter
+
+    }
+
+    private fun setUpActionBar() {
+
+        Logger.d(TAG, "setUpActionBar(): ")
+
+        setSupportActionBar(toolbar)
+
+        // For the immersive-window behavior, we do the following
+        // toolbar gets cut in half due to "windowTranslucentStatus = true" &
+        // "windowTranslucentNavigation = true" set in HomeActivityTheme,
+        // so we have to handle insets ourselves
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+
+            toolbar.setOnApplyWindowInsetsListener { v, insets ->
+
+                // inset the toolbar down by the status bar height
+                val lpToolbar = v.layoutParams as ViewGroup.MarginLayoutParams
+                lpToolbar.topMargin += insets.systemWindowInsetTop
+                lpToolbar.leftMargin += insets.systemWindowInsetLeft
+                lpToolbar.rightMargin += insets.systemWindowInsetRight
+                v.layoutParams = lpToolbar
+
+                // clear this listener so insets aren't re-applied
+                v.setOnApplyWindowInsetsListener(null)
+
+                insets.consumeSystemWindowInsets()
+            }
+        }
 
     }
 
