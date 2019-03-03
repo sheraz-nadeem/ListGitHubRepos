@@ -3,6 +3,9 @@ package com.sheraz.listrepos.internal
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.sheraz.listrepos.utils.Logger
 import java.io.IOException
 
@@ -21,6 +24,7 @@ inline fun <reified T : Fragment> AppCompatActivity.findFragmentByTagWithAutoDis
     return fragment
 }
 
+inline fun <reified V : ViewModel> AppCompatActivity.bindViewModel(viewModelFactory: ViewModelProvider.Factory) = lazy { ViewModelProviders.of(this, viewModelFactory).get(V::class.java) }
 
 
 /**

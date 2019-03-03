@@ -3,8 +3,6 @@ package com.sheraz.listrepos.ui.modules.home
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sheraz.listrepos.Injector
 import com.sheraz.listrepos.databinding.ActivityHomeBinding
@@ -22,21 +20,18 @@ import com.sheraz.listrepos.BR
 import com.sheraz.listrepos.R
 import android.view.Menu
 import android.view.MenuItem
+import com.sheraz.listrepos.internal.bindViewModel
 
 
 class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
-    private lateinit var homeViewModel: HomeViewModel
     private lateinit var activityHomeBinding: ActivityHomeBinding
-
-    private val viewModelFactory: ViewModelProvider.Factory
     private val homeAdapter: HomeAdapter
-
+    private val homeViewModel by bindViewModel<HomeViewModel>(viewModelFactory)
 
     init {
 
         Logger.d(TAG, "init(): ")
-        viewModelFactory = Injector.get().viewModelFactory()
         homeAdapter = Injector.get().homeAdapter()
 
     }
@@ -88,7 +83,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     override fun getViewModel(): HomeViewModel {
 
         Logger.d(TAG, "getViewModel(): ")
-        homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel::class.java)
         return homeViewModel
 
     }

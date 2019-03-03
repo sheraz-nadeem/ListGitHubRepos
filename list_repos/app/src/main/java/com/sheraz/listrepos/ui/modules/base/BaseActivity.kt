@@ -6,6 +6,8 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.lifecycle.ViewModelProvider
+import com.sheraz.listrepos.Injector
 import com.sheraz.listrepos.internal.findFragmentByTag
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
 import com.sheraz.listrepos.ui.modules.home.GoToUrlBottomSheetDialogFragment
@@ -18,9 +20,13 @@ abstract class BaseActivity<VIEW_DATA_BINDING : ViewDataBinding, VIEW_MODEL : Ba
     private lateinit var viewDataBinding: VIEW_DATA_BINDING
     private lateinit var viewModel: VIEW_MODEL
 
+    protected val viewModelFactory: ViewModelProvider.Factory
 
     init {
+
         Logger.d(TAG, "init(): ")
+        viewModelFactory = Injector.get().viewModelFactory()
+
     }
 
 
