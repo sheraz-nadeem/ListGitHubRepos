@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.LENGTH_LONG
 import com.sheraz.listrepos.BR
@@ -30,6 +31,8 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
     private lateinit var activityHomeBinding: ActivityHomeBinding
     private val homeAdapter: HomeAdapter
     private val homeViewModel by bindViewModel<HomeViewModel>(viewModelFactory)
+
+    private var smoothScrollNeeded = false
 
     init {
 
@@ -109,6 +112,37 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
         swipeRefreshLayout.setOnRefreshListener {
             homeViewModel.onRefresh()
         }
+
+        rvGitHubRepoList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                // When user scrolls up, we show fab so user can easily scroll
+                // to top/zero index of the list by just clicking this fab
+                if (dy < 0 && !fab.isShown) {
+                    fab.show()
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // We need to hide this fab but only when user clicks on
+                    // fab button, so we check for "smoothScrollNeeded" boolean
+                    // if it's true then we know user clicked on fab
+                    // and now if fab.isShown then hide the fab as recyclerView's
+                    // scrollState == SCROLL_STATE_IDLE
+                    if (smoothScrollNeeded && fab.isShown) {
+                        fab.hide()
+                        smoothScrollNeeded = false
+                    }
+                }
+
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
+
+        fab.setOnClickListener {
+            smoothScrollNeeded = true
+            rvGitHubRepoList.smoothScrollToPosition(0).also { appBar.setExpanded(true, true) } }
 
     }
 
