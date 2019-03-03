@@ -63,6 +63,13 @@ class AppRepositoryImpl(
         }
     }
 
+    override fun refreshReposList() {
+
+        Logger.d(TAG, "refreshReposList(): ")
+        fetchGitHubReposFromNetworkAndPersist(-1)
+
+    }
+
     override fun getLiveDataPagedList() : LiveData<PagedList<GitHubRepoItem>> {
 
         Logger.d(TAG, "getLiveDataPagedList(): ")
@@ -98,7 +105,7 @@ class AppRepositoryImpl(
 
     }
 
-    override fun fetchGitHubReposFromNetworkAndPersist(page: Int, per_page: Int) {
+    private fun fetchGitHubReposFromNetworkAndPersist(page: Int = 1, per_page: Int = AppRepository.NETWORK_PAGE_SIZE) {
 
         Logger.d(TAG, "fetchGitHubReposFromNetworkAndPersist(): page: $page, per_page: $per_page")
 
