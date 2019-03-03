@@ -20,6 +20,7 @@
         android:background="@android:color/white">
 
         <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -48,9 +49,18 @@
                 android:paddingLeft="@dimen/dimen_5"
                 android:paddingEnd="@dimen/dimen_5"
                 android:paddingRight="@dimen/dimen_5"
+                android:scrollbarStyle="insideOverlay"
                 android:scrollbars="vertical" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/dimen_15"
+            app:srcCompat="@drawable/ic_navigate_up_arrow" />
 
 
         <androidx.core.widget.ContentLoadingProgressBar
