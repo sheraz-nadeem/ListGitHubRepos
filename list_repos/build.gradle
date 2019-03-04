@@ -55,6 +55,8 @@ ext {
 
     // Test dependencies
     junitVersion = '4.12'
+    mockitoKotlinVersion = '2.1.0'
+    archCoreTestingVersion = '2.0.0'
     testRunnerVersion = '1.1.1-alpha01'
     espressoVersion = '3.1.1'
 

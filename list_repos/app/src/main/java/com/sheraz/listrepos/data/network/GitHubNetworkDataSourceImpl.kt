@@ -13,7 +13,7 @@ class GitHubNetworkDataSourceImpl(
 
 
     init {
-        Logger.d(TAG, "init(): ")
+//        Logger.d(TAG, "init(): ")
     }
 
     /**
@@ -31,7 +31,7 @@ class GitHubNetworkDataSourceImpl(
      */
     override suspend fun loadGitHubRepos(page: Int, per_page: Int) {
 
-        Logger.d(TAG, "loadGitHubRepos(): page: $page, per_page: $per_page")
+//        Logger.d(TAG, "loadGitHubRepos(): page: $page, per_page: $per_page")
         safeApiCall(
             networkBlock = { fetchGitHubRepos(page, per_page) },
             failureBlock = { _downloadedGitHubRepoList.postValue(Result.failure(it)) },
@@ -45,7 +45,7 @@ class GitHubNetworkDataSourceImpl(
      */
     private suspend fun fetchGitHubRepos(page: Int, per_page: Int) {
 
-        Logger.d(TAG, "fetchGitHubRepos(): page: $page, per_page: $per_page")
+//        Logger.d(TAG, "fetchGitHubRepos(): page: $page, per_page: $per_page")
 
         val response = gitHubApiService.getReposWithPageAsync(page, per_page).await()
 
