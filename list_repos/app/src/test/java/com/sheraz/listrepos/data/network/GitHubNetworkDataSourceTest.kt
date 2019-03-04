@@ -63,7 +63,7 @@ class GitHubNetworkDataSourceTest {
         networkDataSource.loadGitHubRepos(1, 2)
 
         // Then verify the followings
-        val expectedIOException = IOException("Error loading github repos data")
+        val expectedIOException = IOException(ERROR_MESSAGE)
         val liveDataEvent: Result<List<GitHubRepoEntity>> = LiveDataTestUtil.getValue(networkDataSource.downloadedGitHubRepoList)
         val actualException = liveDataEvent.exceptionOrNull()!!
         assertTrue(actualException is IOException)
