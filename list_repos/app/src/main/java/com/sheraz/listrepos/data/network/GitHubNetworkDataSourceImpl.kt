@@ -3,6 +3,7 @@ package com.sheraz.listrepos.data.network
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
+import com.sheraz.listrepos.data.network.GitHubNetworkDataSource.Companion.ERROR_MESSAGE
 import com.sheraz.listrepos.internal.safeApiCall
 import com.sheraz.listrepos.utils.Logger
 import java.io.IOException
@@ -35,7 +36,7 @@ class GitHubNetworkDataSourceImpl(
         safeApiCall(
             networkBlock = { fetchGitHubRepos(page, per_page) },
             failureBlock = { _downloadedGitHubRepoList.postValue(Result.failure(it)) },
-            errorMessage = "Error loading github repos data ")
+            errorMessage = ERROR_MESSAGE)
 
     }
 
@@ -58,7 +59,7 @@ class GitHubNetworkDataSourceImpl(
                 _downloadedGitHubRepoList.postValue(Result.success(it))
             } ?: throw IOException(" Throwing exception ${response.code()} ${response.message()}")
 
-        }
+        } else throw IOException(" Throwing exception ${response.code()} ${response.message()}")
     }
 
 

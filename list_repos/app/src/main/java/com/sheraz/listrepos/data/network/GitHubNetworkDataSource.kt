@@ -8,4 +8,7 @@ interface GitHubNetworkDataSource {
     val downloadedGitHubRepoList: LiveData<Result<List<GitHubRepoEntity>>>
     suspend fun loadGitHubRepos(page: Int, per_page: Int)
 
+    companion object {
+        const val ERROR_MESSAGE = "Error loading github repos data"
+    }
 }

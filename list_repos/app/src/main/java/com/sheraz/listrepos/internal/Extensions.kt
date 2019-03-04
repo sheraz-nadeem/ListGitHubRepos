@@ -35,7 +35,7 @@ suspend fun safeApiCall(networkBlock: suspend () -> Unit, failureBlock: (Excepti
         networkBlock()
     } catch (e: Exception) {
         // An exception was thrown when calling the API so we're converting this to an IOException
-        Logger.e("safeApiCall", "safeApiCall(): Exception occurred, Error => " + e.message)
+//        Logger.e("safeApiCall", "safeApiCall(): Exception occurred, Error => " + e.message)
         failureBlock(IOException(errorMessage, e))
     }
 }
