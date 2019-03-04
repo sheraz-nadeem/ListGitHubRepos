@@ -2,8 +2,6 @@ package com.sheraz.listrepos.utils
 
 import android.util.Log
 import com.sheraz.listrepos.BuildConfig
-import com.sheraz.listrepos.ui.modules.base.BaseActivity
-import timber.log.Timber
 
 
 
