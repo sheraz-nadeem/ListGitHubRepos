@@ -39,9 +39,7 @@ class AppRepositoryImpl(
 
 
     init {
-        Logger.d(TAG, "init(): ")
-
-        _isFetchInProgress.value = false
+//        Logger.d(TAG, "init(): ")
 
         pagedListConfig =
             PagedList.Config.Builder()
@@ -65,17 +63,17 @@ class AppRepositoryImpl(
 
     override fun clearCache() {
 
-        Logger.d(TAG, "clearCache(): ")
+//        Logger.d(TAG, "clearCache(): ")
 
         scope.launch(dispatcherProvider.ioDispatcher) {
             try {
 
                 val numOfRowsDeleted = gitHubRepoEntityDao.deleteAll()
-                Logger.i(TAG, "clearCache(): numOfRowsDeleted: $numOfRowsDeleted")
+//                Logger.i(TAG, "clearCache(): numOfRowsDeleted: $numOfRowsDeleted")
 
             } catch (e: Exception) {
 
-                Logger.e(TAG, "clearCache(): Exception occurred, Error => ${e.message}")
+//                Logger.e(TAG, "clearCache(): Exception occurred, Error => ${e.message}")
 
             }
 
@@ -85,28 +83,28 @@ class AppRepositoryImpl(
 
     override fun refreshReposList() {
 
-        Logger.d(TAG, "refreshReposList(): ")
+//        Logger.d(TAG, "refreshReposList(): ")
         fetchGitHubReposFromNetworkAndPersist(-1)
 
     }
 
     override fun getLiveDataPagedList() : LiveData<PagedList<GitHubRepoItem>> {
 
-        Logger.d(TAG, "getLiveDataPagedList(): ")
+//        Logger.d(TAG, "getLiveDataPagedList(): ")
         return LivePagedListBuilder<Int, GitHubRepoItem>(getAllReposPagedFactory(), pagedListConfig).setBoundaryCallback(RepoBoundaryCallback()).build()
 
     }
 
     private fun getAllReposPagedFactory() : DataSource.Factory<Int, GitHubRepoItem> {
 
-        Logger.d(TAG, "getAllReposPagedFactory(): ")
+//        Logger.d(TAG, "getAllReposPagedFactory(): ")
         return gitHubRepoEntityDao.getAllReposPaged().map { dbRepoMapper.fromDb(it) }
 
     }
 
     private fun persistDownloadedGitHubRepoEntityList(gitHubRepoEntityList: List<GitHubRepoEntity>) {
 
-        Logger.d(TAG, "persistDownloadedGitHubRepoEntityList(): gitHubRepoEntityList.size: ${gitHubRepoEntityList.size}")
+//        Logger.d(TAG, "persistDownloadedGitHubRepoEntityList(): gitHubRepoEntityList.size: ${gitHubRepoEntityList.size}")
 
         scope.launch(dispatcherProvider.ioDispatcher) {
             try {
@@ -117,7 +115,7 @@ class AppRepositoryImpl(
 
             } catch (e: Exception) {
 
-                Logger.e(TAG, "persistDownloadedGitHubRepoEntityList(): Exception occurred, Error => ${e.localizedMessage}")
+//                Logger.e(TAG, "persistDownloadedGitHubRepoEntityList(): Exception occurred, Error => ${e.localizedMessage}")
 
             }
 
@@ -127,15 +125,14 @@ class AppRepositoryImpl(
 
     private fun fetchGitHubReposFromNetworkAndPersist(page: Int = 1, per_page: Int = AppRepository.NETWORK_PAGE_SIZE) {
 
-        Logger.d(TAG, "fetchGitHubReposFromNetworkAndPersist(): page: $page, per_page: $per_page")
+//        Logger.d(TAG, "fetchGitHubReposFromNetworkAndPersist(): page: $page, per_page: $per_page")
 
         scope.launch(dispatcherProvider.ioDispatcher) {
 
             _isFetchInProgress.postValue(true)
             val numOfRows = getNumOfRows()
-//            val actualPageSize = (numOfRows / AppRepository.NETWORK_PAGE_SIZE) + 1
             val actualPageSize = getActualPageSize(page, numOfRows)
-            Logger.i(TAG, "fetchGitHubReposFromNetworkAndPersist(): numOfRows: $numOfRows, actualPageSize: $actualPageSize")
+//            Logger.i(TAG, "fetchGitHubReposFromNetworkAndPersist(): numOfRows: $numOfRows, actualPageSize: $actualPageSize")
 
             gitHubNetworkDataSource.loadGitHubRepos(actualPageSize, per_page)
         }
@@ -155,7 +152,7 @@ class AppRepositoryImpl(
 
     override fun cancelAllRequests() {
 
-        Logger.d(TAG, "cancelAllRequests(): ")
+//        Logger.d(TAG, "cancelAllRequests(): ")
         parentJob.cancelChildren()
 
     }
@@ -167,7 +164,7 @@ class AppRepositoryImpl(
          * Database returned 0 items. We should query the backend for more items.
          */
         override fun onZeroItemsLoaded() {
-            Logger.d(TAG_REPO_BOUNDARY_CALLBACK, "onZeroItemsLoaded(): ")
+//            Logger.d(TAG_REPO_BOUNDARY_CALLBACK, "onZeroItemsLoaded(): ")
             requestAndSaveData()
         }
 
@@ -175,7 +172,7 @@ class AppRepositoryImpl(
          * When all items in the database were loaded, we need to query the backend for more items.
          */
         override fun onItemAtEndLoaded(itemAtEnd: GitHubRepoItem) {
-            Logger.d(TAG_REPO_BOUNDARY_CALLBACK, "onItemAtEndLoaded(): ")
+//            Logger.d(TAG_REPO_BOUNDARY_CALLBACK, "onItemAtEndLoaded(): ")
             requestAndSaveData()
         }
 
