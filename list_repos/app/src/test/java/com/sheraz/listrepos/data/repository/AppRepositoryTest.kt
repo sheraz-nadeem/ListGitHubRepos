@@ -2,9 +2,7 @@ package com.sheraz.listrepos.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import com.nhaarman.mockitokotlin2.*
 import com.sheraz.listrepos.data.CoroutinesDispatcherProvider
 import com.sheraz.listrepos.data.db.dao.GitHubRepoEntityDao
 import com.sheraz.listrepos.data.db.entity.GitHubRepoEntity
@@ -14,6 +12,7 @@ import com.sheraz.listrepos.shared.afQuickLookView
 import com.sheraz.listrepos.shared.amiandoRepo
 import com.sheraz.listrepos.shared.provideFakeCoroutinesDispatcherProvider
 import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -57,6 +56,23 @@ class AppRepositoryTest {
         // Verify that at least once the network sources calls loadGitHubRepos() method
         verify(gitHubNetworkDataSource).loadGitHubRepos(1, AppRepository.NETWORK_PAGE_SIZE)
 
+    }
+
+    @Test
+    fun refreshList_withAtLeastOneNetworkCall_withArgumentCaptor() = runBlocking {
+
+        // Given the refresh repos list happens
+        appRepository.refreshReposList()
+
+        // Verify that only once loadGitHubRepos() method is called
+        // with correct arguments
+        val captor = argumentCaptor<Int>().apply {
+            verify(gitHubNetworkDataSource, times(1)).loadGitHubRepos(capture(), capture())
+        }
+
+        assertEquals(2, captor.allValues.size)
+        assertEquals(1, captor.firstValue)
+        assertEquals(AppRepository.NETWORK_PAGE_SIZE, captor.secondValue)
     }
 
 }
