@@ -75,4 +75,14 @@ class AppRepositoryTest {
         assertEquals(AppRepository.NETWORK_PAGE_SIZE, captor.secondValue)
     }
 
+    @Test
+    fun clearCache_withAtLeastOneDaoMethodCall() {
+
+        // Given the clear cache is triggered
+        appRepository.clearCache()
+
+        // Verify that once DAO method call is invoked
+        verify(gitHubRepoEntityDao, times(1)).deleteAll()
+    }
+
 }
