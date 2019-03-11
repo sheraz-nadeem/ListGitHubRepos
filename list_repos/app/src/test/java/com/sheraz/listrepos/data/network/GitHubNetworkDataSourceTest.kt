@@ -8,6 +8,7 @@ import com.sheraz.listrepos.data.network.GitHubNetworkDataSource.Companion.ERROR
 import com.sheraz.listrepos.shared.LiveDataTestUtil
 import com.sheraz.listrepos.shared.afQuickLookView
 import com.sheraz.listrepos.shared.amiandoRepo
+import com.sheraz.listrepos.utils.Logger
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
@@ -32,8 +33,9 @@ class GitHubNetworkDataSourceTest {
 
     private val repoList = listOf(amiandoRepo, afQuickLookView)
 
+    private val logger: Logger = mock()
     private val service: GitHubApiService = mock()
-    private val networkDataSource = GitHubNetworkDataSourceImpl(service)
+    private val networkDataSource = GitHubNetworkDataSourceImpl(logger, service)
 
 
     @Test

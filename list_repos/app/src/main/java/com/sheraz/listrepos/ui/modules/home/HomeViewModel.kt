@@ -14,7 +14,7 @@ class HomeViewModel(
 ) : BaseViewModel() {
 
     init {
-        Logger.d(TAG, "init(): ")
+        logger.d(TAG, "init(): ")
         setIsLoading(false)
     }
 
@@ -30,7 +30,7 @@ class HomeViewModel(
 
     override fun onCleared() {
 
-        Logger.d(TAG, "onCleared(): ")
+        logger.d(TAG, "onCleared(): ")
         super.onCleared()
         appRepository.cancelAllRequests()
 

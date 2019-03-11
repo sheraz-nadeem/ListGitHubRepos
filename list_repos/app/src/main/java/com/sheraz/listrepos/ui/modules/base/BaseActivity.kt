@@ -21,28 +21,30 @@ abstract class BaseActivity<VIEW_DATA_BINDING : ViewDataBinding, VIEW_MODEL : Ba
     private lateinit var viewModel: VIEW_MODEL
 
     protected val viewModelFactory: ViewModelProvider.Factory
+    protected val logger: Logger
 
     init {
 
-        Logger.d(TAG, "init(): ")
         viewModelFactory = Injector.get().viewModelFactory()
+        logger = Injector.get().logger()
+        logger.d(TAG, "init(): ")
 
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Logger.d(TAG, "onCreate(): ")
+        logger.d(TAG, "onCreate(): ")
         super.onCreate(savedInstanceState)
         performDataBinding()
     }
 
     fun getViewDataBinding(): VIEW_DATA_BINDING {
-        Logger.d(TAG, "getViewDataBinding(): ")
+        logger.d(TAG, "getViewDataBinding(): ")
         return viewDataBinding
     }
 
     private fun performDataBinding() {
-        Logger.d(TAG, "performDataBinding(): ")
+        logger.d(TAG, "performDataBinding(): ")
         viewDataBinding = DataBindingUtil.setContentView(this, getLayoutResId())
         viewModel = getViewModel()
         viewDataBinding.setVariable(getBindingVariable(), viewModel)
@@ -51,7 +53,7 @@ abstract class BaseActivity<VIEW_DATA_BINDING : ViewDataBinding, VIEW_MODEL : Ba
 
     fun openGoToUrlBottomSheet(gitHubRepoItem: GitHubRepoItem) {
 
-        Logger.d(TAG, "openGoToUrlBottomSheet(): gitHubRepoItem: $gitHubRepoItem")
+        logger.d(TAG, "openGoToUrlBottomSheet(): gitHubRepoItem: $gitHubRepoItem")
 
         var fragment: GoToUrlBottomSheetDialogFragment? = findFragmentByTag(GoToUrlBottomSheetDialogFragment.TAG)
 

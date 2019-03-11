@@ -5,6 +5,7 @@ import com.sheraz.listrepos.ViewModelProviderFactory
 import com.sheraz.listrepos.data.repository.AppRepository
 import com.sheraz.listrepos.ui.modules.adapters.HomeAdapter
 import com.sheraz.listrepos.ui.modules.home.HomeViewModel
+import com.sheraz.listrepos.utils.Logger
 import com.squareup.picasso.Picasso
 import dagger.Module
 import dagger.Provides
@@ -13,7 +14,7 @@ import dagger.Provides
 class HomeModule {
 
     @Provides
-    fun provideHomeAdapter(picasso: Picasso): HomeAdapter = HomeAdapter(picasso)
+    fun provideHomeAdapter(logger: Logger, picasso: Picasso): HomeAdapter = HomeAdapter(logger, picasso)
 
     @Provides
     fun provideViewModelFactory(homeViewModel: HomeViewModel): ViewModelProvider.Factory {

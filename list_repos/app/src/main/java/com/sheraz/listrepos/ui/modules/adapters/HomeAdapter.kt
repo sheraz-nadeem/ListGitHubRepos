@@ -15,27 +15,28 @@ import kotlinx.android.synthetic.main.item_home.view.*
 
 
 class HomeAdapter (
+    private val logger: Logger,
     private val mPicasso: Picasso
 ) : PagedListAdapter<GitHubRepoItem, HomeAdapter.ViewHolder>(GitHubRepoDiffCallback()) {
 
 
     private var mListener: View.OnClickListener? = null
 
-    init { Logger.d(TAG, "init(): ") }
+    init { logger.d(TAG, "init(): ") }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, view_type: Int): ViewHolder {
-        Logger.d(TAG, "onCreateViewHolder: ")
+        logger.d(TAG, "onCreateViewHolder: ")
         val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_home, viewGroup, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        Logger.d(TAG, "onBindViewHolder: position: $position, currentList.size: ${currentList?.size}")
+        logger.d(TAG, "onBindViewHolder: position: $position, currentList.size: ${currentList?.size}")
         viewHolder.bind(getItem(position))
     }
 
     fun setListener(listener: View.OnClickListener) {
-        Logger.d(TAG, "setListener: ")
+        logger.d(TAG, "setListener: ")
         mListener = listener
     }
 
@@ -56,7 +57,7 @@ class HomeAdapter (
                 itemView.tag = gitHubRepoItem
             }
 
-            Logger.d(TAG, "setUpViews: position: $adapterPosition, ownerAvatarUrl: ${gitHubRepoItem?.ownerAvatarUrl}")
+            logger.d(TAG, "setUpViews: position: $adapterPosition, ownerAvatarUrl: ${gitHubRepoItem?.ownerAvatarUrl}")
 
             mPicasso.load(gitHubRepoItem?.ownerAvatarUrl)
                 .noFade()
@@ -85,7 +86,7 @@ class HomeAdapter (
 
             itemView.setOnLongClickListener {
 
-                Logger.d(TAG, "OnLongClickListener: position: $adapterPosition")
+                logger.d(TAG, "OnLongClickListener: position: $adapterPosition")
                 mListener?.onClick(it)
                 return@setOnLongClickListener true
 

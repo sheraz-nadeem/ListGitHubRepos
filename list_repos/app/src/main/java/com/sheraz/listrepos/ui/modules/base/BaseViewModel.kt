@@ -2,15 +2,17 @@ package com.sheraz.listrepos.ui.modules.base
 
 import androidx.databinding.ObservableBoolean
 import androidx.lifecycle.ViewModel
+import com.sheraz.listrepos.Injector
 import com.sheraz.listrepos.utils.Logger
 
 abstract class BaseViewModel: ViewModel() {
 
 
     val isLoading = ObservableBoolean(false)
+    protected val logger: Logger = Injector.get().logger()
 
     init {
-        Logger.d(TAG, "init(): ")
+        logger.d(TAG, "init(): ")
     }
 
 

@@ -2,6 +2,7 @@ package com.sheraz.listrepos.data.repository
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import com.nhaarman.mockitokotlin2.*
 import com.sheraz.listrepos.data.CoroutinesDispatcherProvider
 import com.sheraz.listrepos.data.db.dao.GitHubRepoEntityDao
@@ -11,15 +12,23 @@ import com.sheraz.listrepos.data.network.GitHubNetworkDataSource
 import com.sheraz.listrepos.shared.afQuickLookView
 import com.sheraz.listrepos.shared.amiandoRepo
 import com.sheraz.listrepos.shared.provideFakeCoroutinesDispatcherProvider
+import com.sheraz.listrepos.ui.models.GitHubRepoItem
+import com.sheraz.listrepos.utils.Logger
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.stubbing.Answer
+
 
 /**
  * Tests for [AppRepository] class
  */
+@RunWith(MockitoJUnitRunner::class)
 class AppRepositoryTest {
 
     // Executes tasks in the Architecture Components in the same thread
@@ -29,9 +38,11 @@ class AppRepositoryTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
 
+    private val dbRepoMapper: DbRepoMapper = mock()
+
     private val repoList = listOf(amiandoRepo, afQuickLookView)
 
-    private val dbRepoMapper: DbRepoMapper = DbRepoMapper()
+    private val logger: Logger = mock()
     private val gitHubRepoEntityDao: GitHubRepoEntityDao = mock()
     private val gitHubNetworkDataSource: GitHubNetworkDataSource = mock()
     private val dispatcherProvider: CoroutinesDispatcherProvider = provideFakeCoroutinesDispatcherProvider()
@@ -44,7 +55,7 @@ class AppRepositoryTest {
 
         whenever(gitHubNetworkDataSource.downloadedGitHubRepoList).thenReturn(fakeLiveData)
         appRepository =
-            AppRepositoryImpl(dbRepoMapper, gitHubRepoEntityDao, gitHubNetworkDataSource, dispatcherProvider)
+            AppRepositoryImpl(logger, dbRepoMapper, gitHubRepoEntityDao, gitHubNetworkDataSource, dispatcherProvider)
     }
 
     @Test
@@ -85,4 +96,20 @@ class AppRepositoryTest {
         verify(gitHubRepoEntityDao, times(1)).deleteAll()
     }
 
+//    @Test
+//    fun getLiveData() {
+//
+//        // Given the live data is requested
+//        whenever(gitHubRepoEntityDao.getAllReposPaged()).thenReturn(fakeDataSourceEntity)
+//        whenever(dbRepoMapper.fromDb(any())).thenReturn(gitRepoItemList[0])
+//        whenever(dbRepoMapper.fromDb(any())).thenAnswer(Answer<GitHubRepoItem> { return@Answer gitRepoItemList[0] })
+//        whenever(fakeDataSourceEntity.map { dbRepoMapper.fromDb(any()) as GitHubRepoItem }).thenAnswer(Answer<GitHubRepoItem> { return@Answer gitRepoItemList[0] })
+//
+//        whenever(appRepository.getAllReposPagedFactory()).thenReturn(fakeDataSourceItem)
+//
+//        // When we request live data
+//        val liveData = appRepository.getLiveDataPagedList()
+//
+//        assertNotNull(liveData)
+//    }
 }

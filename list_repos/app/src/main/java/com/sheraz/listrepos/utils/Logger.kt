@@ -4,8 +4,7 @@ import android.util.Log
 import com.sheraz.listrepos.BuildConfig
 
 
-
-object Logger {
+open class Logger {
 
     private val TAG = Logger::class.java.simpleName
     private var loggingEnabled = false

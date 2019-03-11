@@ -12,12 +12,13 @@ class GitHubListRepoApplication : Application() {
         private set
 
     override fun onCreate() {
-        Logger.d(TAG, "onCreate: ")
         super.onCreate()
         INSTANCE = this
         component = DaggerAppComponent.builder()
             .contextModule(ContextModule(this))
             .build()
+
+        component.logger().d(TAG, "onCreate: ")
     }
 
     companion object {

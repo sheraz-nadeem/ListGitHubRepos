@@ -10,6 +10,7 @@ import com.sheraz.listrepos.data.repository.AppRepository
 import com.sheraz.listrepos.di.module.*
 import com.sheraz.listrepos.ui.modules.adapters.HomeAdapter
 import com.sheraz.listrepos.ui.modules.home.HomeViewModel
+import com.sheraz.listrepos.utils.Logger
 import com.squareup.picasso.Picasso
 import dagger.Component
 import retrofit2.Retrofit
@@ -24,7 +25,8 @@ import javax.inject.Singleton
         DatabaseModule::class,
         DaoModule::class,
         RepositoryModule::class,
-        HomeModule::class
+        HomeModule::class,
+        LoggerModule::class
     ]
 )
 interface AppComponent {
@@ -40,5 +42,6 @@ interface AppComponent {
     fun homeAdapter(): HomeAdapter
     fun homeViewModel(): HomeViewModel
     fun viewModelFactory(): ViewModelProvider.Factory
+    fun logger(): Logger
 
 }

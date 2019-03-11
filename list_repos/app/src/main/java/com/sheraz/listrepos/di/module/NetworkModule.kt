@@ -8,6 +8,7 @@ import com.sheraz.listrepos.data.network.GitHubApiService
 import com.sheraz.listrepos.data.network.GitHubNetworkDataSource
 import com.sheraz.listrepos.data.network.GitHubNetworkDataSourceImpl
 import com.sheraz.listrepos.data.network.HttpLogger
+import com.sheraz.listrepos.utils.Logger
 import com.squareup.picasso.OkHttp3Downloader
 import com.squareup.picasso.Picasso
 import dagger.Module
@@ -23,7 +24,7 @@ import javax.inject.Singleton
 class NetworkModule {
 
     @Provides
-    fun providerHttpLogger(): HttpLogger = HttpLogger()
+    fun providerHttpLogger(logger: Logger): HttpLogger = HttpLogger(logger)
 
     @Provides
     fun provideLoggingInterceptor(httpLogger: HttpLogger): HttpLoggingInterceptor {
@@ -89,8 +90,8 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideNetworkDataSource(apiService: GitHubApiService) : GitHubNetworkDataSource {
-        return GitHubNetworkDataSourceImpl(apiService)
+    fun provideNetworkDataSource(logger: Logger, apiService: GitHubApiService) : GitHubNetworkDataSource {
+        return GitHubNetworkDataSourceImpl(logger, apiService)
     }
 
     companion object {

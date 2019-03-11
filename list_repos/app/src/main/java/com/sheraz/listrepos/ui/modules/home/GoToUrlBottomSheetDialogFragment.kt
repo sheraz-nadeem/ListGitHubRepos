@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.sheraz.listrepos.Injector
 import com.sheraz.listrepos.R
 import com.sheraz.listrepos.databinding.FragmentGoToUrlBottomSheetBinding
 import com.sheraz.listrepos.ui.models.GitHubRepoItem
@@ -29,34 +30,34 @@ class GoToUrlBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Logger.d(TAG, "onCreate: ")
+        logger.d(TAG, "onCreate: ")
         super.onCreate(savedInstanceState)
         initData()
     }
 
     private fun initData() {
 
-        Logger.d(TAG, "initData: ")
+        logger.d(TAG, "initData: ")
         if (arguments != null && arguments!!.getParcelable<Parcelable>(ARG_REPO_DATA_ITEM) != null) {
             repoItem = arguments!!.getParcelable<Parcelable>(ARG_REPO_DATA_ITEM) as GitHubRepoItemImpl
-            Logger.v(TAG, "initData: repoItem: " + repoItem!!.toString())
+            logger.v(TAG, "initData: repoItem: " + repoItem!!.toString())
         }
 
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        Logger.d(TAG, "onCreateDialog: ")
+        logger.d(TAG, "onCreateDialog: ")
         return super.onCreateDialog(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        Logger.d(TAG, "onCreateView: ")
+        logger.d(TAG, "onCreateView: ")
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_go_to_url_bottom_sheet, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        Logger.d(TAG, "onViewCreated: ")
+        logger.d(TAG, "onViewCreated: ")
 
         super.onViewCreated(view, savedInstanceState)
 
@@ -74,24 +75,24 @@ class GoToUrlBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         ibDoneAction.setOnClickListener {
-            Logger.d(TAG, "ibDoneAction.onClick: chosenUrl: $chosenUrl")
+            logger.d(TAG, "ibDoneAction.onClick: chosenUrl: $chosenUrl")
             chooseGoToUrlListener?.onChooseUrl(chosenUrl)
             dismiss()
         }
     }
 
     override fun onResume() {
-        Logger.d(TAG, "onResume: ")
+        logger.d(TAG, "onResume: ")
         super.onResume()
     }
 
     override fun onPause() {
-        Logger.d(TAG, "onPause: ")
+        logger.d(TAG, "onPause: ")
         super.onPause()
     }
 
     override fun onDestroy() {
-        Logger.d(TAG, "onDestroy: ")
+        logger.d(TAG, "onDestroy: ")
         super.onDestroy()
     }
 
@@ -113,6 +114,7 @@ class GoToUrlBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         val TAG = GoToUrlBottomSheetDialogFragment::class.java.simpleName
+        val logger: Logger = Injector.get().logger()
         private const val ARG_REPO_DATA_ITEM = "arg_list_items"
 
 

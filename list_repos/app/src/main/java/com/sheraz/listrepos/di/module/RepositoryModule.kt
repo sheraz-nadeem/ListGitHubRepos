@@ -6,6 +6,7 @@ import com.sheraz.listrepos.data.db.mapper.DbRepoMapper
 import com.sheraz.listrepos.data.network.GitHubNetworkDataSource
 import com.sheraz.listrepos.data.repository.AppRepository
 import com.sheraz.listrepos.data.repository.AppRepositoryImpl
+import com.sheraz.listrepos.utils.Logger
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -16,10 +17,11 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideAppRepository(
+        logger: Logger,
         dbRepoMapper: DbRepoMapper,
         dao: GitHubRepoEntityDao,
         networkDataSource: GitHubNetworkDataSource,
         dispatcherProvider: CoroutinesDispatcherProvider
-    ): AppRepository = AppRepositoryImpl(dbRepoMapper, dao, networkDataSource, dispatcherProvider)
+    ): AppRepository = AppRepositoryImpl(logger, dbRepoMapper, dao, networkDataSource, dispatcherProvider)
 
 }

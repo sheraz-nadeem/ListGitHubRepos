@@ -36,14 +36,14 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     init {
 
-        Logger.d(TAG, "init(): ")
+        logger.d(TAG, "init(): ")
         homeAdapter = Injector.get().homeAdapter()
 
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        Logger.d(TAG, "onCreate(): ")
+        logger.d(TAG, "onCreate(): ")
         super.onCreate(savedInstanceState)
         activityHomeBinding = getViewDataBinding()
         initUI()
@@ -54,7 +54,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     override fun initUI() {
 
-        Logger.d(TAG, "initUI(): ")
+        logger.d(TAG, "initUI(): ")
 
         setUpActionBar()
         fab.hide()
@@ -65,7 +65,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     private fun setUpActionBar() {
 
-        Logger.d(TAG, "setUpActionBar(): ")
+        logger.d(TAG, "setUpActionBar(): ")
 
         setSupportActionBar(toolbar)
 
@@ -101,7 +101,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     private fun setUpListeners() {
 
-        Logger.d(TAG, "setUpListeners(): ")
+        logger.d(TAG, "setUpListeners(): ")
 
         homeAdapter.setListener(View.OnClickListener {
             if (it.tag != null) {
@@ -156,28 +156,28 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     override fun getViewModel(): HomeViewModel {
 
-        Logger.d(TAG, "getViewModel(): ")
+        logger.d(TAG, "getViewModel(): ")
         return homeViewModel
 
     }
 
     override fun subscribeUi() {
 
-        Logger.d(TAG, "subscribeUi(): ")
+        logger.d(TAG, "subscribeUi(): ")
 
         homeViewModel.getPagedListAsLiveData().observe(this, Observer { pagedList ->
-            Logger.i(TAG, "pagedList.Observer(): pagedList.size: ${pagedList?.size}")
-            Logger.i(TAG, "pagedList.Observer(): pagedList: ${pagedList?.toString()}")
+            logger.i(TAG, "pagedList.Observer(): pagedList.size: ${pagedList?.size}")
+            logger.i(TAG, "pagedList.Observer(): pagedList: ${pagedList?.toString()}")
             submitList(pagedList, false)
         })
 
         homeViewModel.getLoadingLiveData().observe(this, Observer { isFetchInProgress ->
-            Logger.d(TAG, "loading.Observer(): isFetchInProgress: $isFetchInProgress")
+            logger.d(TAG, "loading.Observer(): isFetchInProgress: $isFetchInProgress")
             handleFetchInProgress(isFetchInProgress)
         })
 
         homeViewModel.getNetworkErrorLiveData().observe(this, Observer { exception ->
-            Logger.d(TAG, "networkError.Observer(): exception: $exception")
+            logger.d(TAG, "networkError.Observer(): exception: $exception")
             handleNetworkError(exception)
         })
 
@@ -185,18 +185,18 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     override fun onChooseUrl(chosenUrl: String) {
 
-        Logger.d(TAG, "onChooseUrl(): chosenUrl: $chosenUrl")
+        logger.d(TAG, "onChooseUrl(): chosenUrl: $chosenUrl")
         try {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(chosenUrl)))
         } catch (e: Exception) {
-            Logger.e(TAG, "onChooseUrl(): chosenUrl: $chosenUrl, Exception occurred while parsing, Error => ${e.message}")
+            logger.e(TAG, "onChooseUrl(): chosenUrl: $chosenUrl, Exception occurred while parsing, Error => ${e.message}")
         }
 
     }
 
     private fun submitList(pagedList: PagedList<GitHubRepoItem>?, isRefreshing: Boolean) {
 
-        Logger.d(TAG, "submitList(): pagedList: ${pagedList?.size}, isRefreshing: $isRefreshing")
+        logger.d(TAG, "submitList(): pagedList: ${pagedList?.size}, isRefreshing: $isRefreshing")
         homeAdapter.submitList(pagedList)
         swipeRefreshLayout.isRefreshing = isRefreshing
 
@@ -204,7 +204,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     private fun handleFetchInProgress(isFetchInProgress: Boolean) {
 
-        Logger.d(TAG, "handleFetchInProgress(): isFetchInProgress: $isFetchInProgress")
+        logger.d(TAG, "handleFetchInProgress(): isFetchInProgress: $isFetchInProgress")
         homeViewModel.setIsLoading(isFetchInProgress)
         swipeRefreshLayout.isRefreshing = false
 
@@ -212,7 +212,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding, HomeViewModel>() {
 
     private fun handleNetworkError(exception: Exception) {
 
-        Logger.d(TAG, "handleNetworkError(): exception: $exception")
+        logger.d(TAG, "handleNetworkError(): exception: $exception")
         swipeRefreshLayout.isRefreshing = false
         Snackbar.make(activityHomeBinding.root, exception.message.toString(), LENGTH_LONG).show()
 
