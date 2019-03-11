@@ -5,7 +5,7 @@ import com.sheraz.listrepos.ui.models.GitHubRepoItemImpl
 import javax.inject.Inject
 
 
-class DbRepoMapper @Inject constructor() {
+open class DbRepoMapper @Inject constructor() {
 
     /**
      * Helper class to map DB objects into Domain layer objects.
